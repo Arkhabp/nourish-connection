@@ -1,0 +1,29 @@
+* {
+    font-family: "Poppins", sans-serif;
+  }
+  .is-button-orange{
+    background-color: #F88125;
+    color: #FFFFFF;
+  }
+  .is-button-blue{
+    background-color: #FFFFFF;
+    color: #2B3692;
+    border-color: #2B3692;
+  }
+  .is-button-red{
+    background-color: #FFFFFF;
+    color: #F88125;
+    border-color: #F88125;
+  }
+  .is-orange{
+    color: #F88125;
+  }
+  .is-blue{
+    color: #2B3692;
+  }
+  .is-white{
+    color: #FFFFFF;
+  }
+  .is-black{
+    color: 1D1B1B;
+  }
