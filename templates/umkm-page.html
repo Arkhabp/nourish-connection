@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UMKM Page || Nourish Connection</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <!-- Bulma CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+   <!-- style css -->
+    <link
+      href="{{ url_for('static', filename='assets/colors/colors.css') }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='assets/font-style/font-style.css') }}"
+      rel="stylesheet"
+    />
+
+    <!-- AJAX -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-1234567890abcdefg..."
+      crossorigin="anonymous"
+    />
+
+    <!-- Poppins Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@500;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- CSS internal Start-->
+    <style>
+      .about-bg {
+        width: 100%;
+        height: 350px;
+        background-image: url("dummy-photo-umkm3.jpg");
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-top: 20px;
+      }
+    </style>
+    <!-- CSS internal Stop-->
+  </head>
+
+  <body>
+    <!-- Navbar Start -->
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+          <img
+            src="{{url_for('static', filename='assets/logo/logo-text-blue.png')}}"
+            width="100"
+          />
+        </a>
+
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-end">
+          <div class="navbar-start">
+            <a class="navbar-item" href="/tentang_nourish"> Tentang Nourish </a>
+            <a class="navbar-item" href="/umkm_list"> UMKM </a>
+            <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
+          </div>
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-button-orange"> Profil </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Navbar Stop -->
+
+    <!-- UMKM Description Start -->
+    <section class="about-bg columns is-align-items-center">
+        <div class="mr-2 ml-2 column is-flex has-text-centered">
+            <div class="is-flex-grow-1">
+                <p class="title is-1 is-spaced">Toko Kayu Hias</h1>
+                 <p class="subtitle is-3">
+                    Surabaya
+                </p>
+            </div>
+        </div>
+    </section>
+    <!-- UMKM Description Stop -->
+
+    <!-- UMKM list Start-->
+    <div class="box">
+        <div class="media-content">
+            <div class="content">
+                <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Odio euismod lacinia at quis. Purus non enim praesent elementum facilisis leo vel fringilla. Integer feugiat scelerisque varius morbi enim nunc faucibus a. Dictumst vestibulum rhoncus est pellentesque. Commodo elit at imperdiet dui accumsan sit amet. Accumsan sit amet nulla facilisi morbi tempus iaculis. Massa enim nec dui nunc mattis enim ut. Nulla facilisi nullam vehicula ipsum. Amet purus gravida quis blandit. Habitasse platea dictumst quisque sagittis purus sit.
+                        <br><br>
+                        Dui id ornare arcu odio ut sem nulla. Dis parturient montes nascetur ridiculus mus. Quis eleifend quam adipiscing vitae proin. Lorem ipsum dolor sit amet consectetur. Fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Id cursus metus aliquam eleifend mi in. Id consectetur purus ut faucibus pulvinar elementum. Pretium fusce id velit ut tortor pretium viverra suspendisse. Laoreet id donec ultrices tincidunt arcu non sodales. Viverra orci sagittis eu volutpat odio facilisis mauris sit. Justo nec ultrices dui sapien eget mi proin sed libero. Maecenas volutpat blandit aliquam etiam erat velit. Ornare arcu odio ut sem nulla pharetra diam. Tortor pretium viverra suspendisse potenti.
+                        <a href="#"> non ante </a>. Phasellus lacus ex, semper ac tortor nec, fringilla condimentum orci. Fusce eu rutrum tellus. </p>
+
+                        <h3>How To Order</h3>
+                        <ol>
+                        <li> Donec blandit a lorem id convallis. </li>
+                        <li> Cras gravida arcu at diam gravida gravida. </li>
+                        <li> Integer in volutpat libero. </li>
+                        <li> Donec a diam tellus. </li>
+                        <li> Aenean nec tortor orci. </li>
+                        <li> Quisque aliquam cursus urna, non bibendum massa viverra eget. </li>
+                        <li> Vivamus maximus ultricies pulvinar. </li>
+                      </ol>
+                      <blockquote> <h4> Sosial Media </h4> 
+                        <ul>
+                            <li> In fermentum leo eu lectus mollis, quis dictum mi aliquet. </li>
+                            <li> Morbi eu nulla lobortis, lobortis est in, fringilla felis. </li>
+                            <li> Aliquam nec felis in sapien venenatis viverra fermentum nec lectus. </li>
+                            <li> Ut non enim metus. </li>
+                          </ul>
+                    </blockquote>
+                      <p> Quisque at semper enim, eu hendrerit odio. Etiam auctor nisl et <em> justo sodales </em> elementum. Maecenas ultrices lacus quis neque consectetur, et lobortis nisi molestie. </p>
+                      <p> Sed sagittis enim ac tortor maximus rutrum. Nulla facilisi. Donec mattis vulputate risus in luctus. Maecenas vestibulum interdum commodo. </p>
+                      <p> Suspendisse egestas sapien non felis placerat elementum. Morbi tortor nisl, suscipit sed mi sit amet, mollis malesuada nulla. Nulla facilisi. Nullam ac erat ante. </p>
+                </p>
+            </div>
+          </div>
+    </div>
+    
+    <!-- UMKM list Stop--> 
+  
+    <!-- Footer Start -->
+    <footer class="my-5">
+        <div class="content has-text-centered">
+          <p class="is-blue">2023 Nourish Connection</p>
+        </div>
+      </footer>
+      <!-- Footer Stop -->
+</body>
+</html>
