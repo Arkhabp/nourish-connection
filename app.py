@@ -24,19 +24,30 @@ def home():
    
     return render_template('index.html')
 
-@app.route('/save_coba', methods=['POST'])
-def save_data():
-    nama_receive = request.form['nama_give']
+@app.route('/tentang_nourish',methods=['GET'])
+def tentang_nourish():
+   
+    return render_template('tentang-nourish.html')
 
-    doc = {
-        'nama_pemesan' : nama_receive,
-    }
+@app.route('/umkm_list',methods=['GET'])
+def umkm_list():
+   
+    return render_template('umkm-list.html')
 
-    db.data.insert_one(doc)
-    return jsonify({
-        'result' : 'success',
-        'msg' : 'data was saved!!!',
-    })
+@app.route('/diskusi',methods=['GET'])
+def diskusi():
+   
+    return render_template('diskusi.html')
+
+@app.route('/login',methods=['GET'])
+def login():
+   
+    return render_template('login.html')
+
+@app.route('/profil/<username>',methods=['GET'])
+def user(username):
+   
+    return render_template('profil.html')
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD

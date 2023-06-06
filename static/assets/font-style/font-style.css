@@ -1,7 +1,16 @@
 .is-button-text{
-    font-weight: 600;
+    font-weight: 700;
 }
 .is-title{
     font-weight: 600;
     font-size:larger;
+}
+.is-title-card{
+    font-weight: 600;
+    font-size:18px;
+}
+.is-subtitle{
+    font-weight: 400;
+    font-size:15px;
+    font-style: italic;
 }

@@ -66,23 +66,33 @@
       .preview-section {
         margin-top: 20px;
       }
+      .container-card {
+        margin-right: 4;
+        margin-left: 4;
+      }
+      .is-truncated {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 5; /* Jumlah baris yang ingin ditampilkan */
+      }
     </style>
 
     <script>
-      function save_data() {
-        let nama = $("#coba").val();
+      // function save_data() {
+      //   let nama = $("#coba").val();
 
-        $.ajax({
-          type: "POST",
-          url: "/save_coba",
-          data: {
-            nama_give: nama,
-          },
-          success: function (response) {
-            alert("data berhasil disimpan");
-          },
-        });
-      }
+      //   $.ajax({
+      //     type: "POST",
+      //     url: "/save_coba",
+      //     data: {
+      //       nama_give: nama,
+      //     },
+      //     success: function (response) {
+      //       alert("data berhasil disimpan");
+      //     },
+      //   });
+      // }
     </script>
   </head>
   <body>
@@ -92,7 +102,7 @@
         <a class="navbar-item" href="/">
           <img
             src="{{url_for('static', filename='assets/logo/logo-text-blue.png')}}"
-            width="80"
+            width="100"
           />
         </a>
 
@@ -112,9 +122,9 @@
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-start">
-            <a class="navbar-item"> Tentang Nourish </a>
-            <a class="navbar-item"> UMKM </a>
-            <a class="navbar-item"> Diskusi UMKM </a>
+            <a class="navbar-item" href="/tentang_nourish"> Tentang Nourish </a>
+            <a class="navbar-item" href="/umkm_list"> UMKM </a>
+            <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
           </div>
           <div class="navbar-item">
             <div class="buttons">
@@ -158,17 +168,17 @@
     <section class="about-bg columns">
       <div class="mr-2 ml-2 column is-flex">
         <div class="is-flex-grow-1">
-          <a href="/">
+          <a href="/tentang_nourish">
             <h1 class="is-title is-white">Tentang Nourish</h1>
           </a>
           <p class="is-white mt-2">
-            kami berinovasi menciptakan sebuah wadah agar UMKM dapat<br />
+            Kami berinovasi menciptakan sebuah wadah agar UMKM dapat<br />
             menambah pengetahuan untuk memperluas jangkauan pelanggan dan<br />
             harapannya umkm dapat terus berkembang dan berdaya.
           </p>
         </div>
         <div class="is-flex-shrink-0">
-          <a href="/">
+          <a href="/tentang_nourish">
             <img
               src="{{url_for('static', filename='assets/logo/logo-text-white.png')}}"
               width="300"
@@ -180,11 +190,121 @@
     <!-- Tentang Nourish Stop -->
 
     <!-- Preview UMKM Start -->
-    <section class="preview-section">
-      <h1 class="is-title is-blue">Preview UMKM</h1>
+    <section class="preview-section mr-2 ml-2">
+      <h1 class="is-title is-blue mb-3">Preview UMKM</h1>
+
+      <div class="container-card" id="cards-box">
+        <div class="row row-cols-1 g-0">
+          <div class="card mr-5" style="width: 18rem; border-radius: 15px">
+            <img
+              src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}"
+              class="card-img-top"
+              alt="..."
+            />
+            <div class="card-body">
+              <a href="#">
+                <h5 class="is-title-card is-blue">Toko Kayu Hias</h5>
+                <em class="is-blue is-subtitle">Banyuwangi</em>
+              </a>
+              <p
+                class="card-text is-truncated is-black mt-1"
+                style="line-height: 1.3"
+              >
+                Toko Kayu Hias adalah sebuah usaha mikro, kecil, dan menengah
+                (UMKM) yang berfokus pada produksi dan penjualan berbagai produk
+                kayu hias.
+              </p>
+              <a href="#">
+                <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
+              </a>
+            </div>
+          </div>
+
+          <div class="card mr-5" style="width: 18rem; border-radius: 15px">
+            <img
+              src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}"
+              class="card-img-top"
+              alt="..."
+            />
+            <div class="card-body">
+              <a href="#">
+                <h5 class="is-title-card is-blue">Toko Kayu Hias</h5>
+                <em class="is-blue is-subtitle">Banyuwangi</em>
+              </a>
+              <p
+                class="card-text is-truncated is-black mt-1"
+                style="line-height: 1.3"
+              >
+                Toko Kayu Hias adalah sebuah usaha mikro, kecil, dan menengah
+                (UMKM) yang berfokus pada produksi dan penjualan berbagai produk
+                kayu hias.
+              </p>
+              <a href="#">
+                <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
+              </a>
+            </div>
+          </div>
+
+          <div class="card mr-5" style="width: 18rem; border-radius: 15px">
+            <img
+              src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}"
+              class="card-img-top"
+              alt="..."
+            />
+            <div class="card-body">
+              <a href="#">
+                <h5 class="is-title-card is-blue">Toko Kayu Hias</h5>
+                <em class="is-blue is-subtitle">Banyuwangi</em>
+              </a>
+              <p
+                class="card-text is-truncated is-black mt-1"
+                style="line-height: 1.3"
+              >
+                Toko Kayu Hias adalah sebuah usaha mikro, kecil, dan menengah
+                (UMKM) yang berfokus pada produksi dan penjualan berbagai produk
+                kayu hias.
+              </p>
+              <a href="#">
+                <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
+              </a>
+            </div>
+          </div>
+
+          <div class="card mr-5" style="width: 18rem; border-radius: 15px">
+            <img
+              src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}"
+              class="card-img-top"
+              alt="..."
+            />
+            <div class="card-body">
+              <a href="#">
+                <h5 class="is-title-card is-blue">Toko Kayu Hias</h5>
+                <em class="is-blue is-subtitle">Banyuwangi</em>
+              </a>
+              <p
+                class="card-text is-truncated is-black mt-1"
+                style="line-height: 1.3"
+              >
+                Toko Kayu Hias adalah sebuah usaha mikro, kecil, dan menengah
+                (UMKM) yang berfokus pada produksi dan penjualan berbagai produk
+                kayu hias.
+              </p>
+              <a href="#">
+                <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
     <!-- Preview UMKM Stop -->
-    <input id="coba" />
-    <button onclick="save_data()">simpan</button>
+
+    <!-- Footer Start -->
+    <footer class="my-5">
+      <div class="content has-text-centered">
+        <p class="is-blue">2023 Nourish Connection</p>
+      </div>
+    </footer>
+    <!-- Footer Stop -->
   </body>
 </html>
