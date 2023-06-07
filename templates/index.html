@@ -127,9 +127,15 @@
             <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
           </div>
           <div class="navbar-item">
+            {% if 'username' in session %}
             <div class="buttons">
-              <a class="button is-button-orange" href="/login"> Masuk </a>
+              <a class="button is-button-orange" href="/profil"> Profil </a>
             </div>
+            {% else %}
+            <div class="buttons">
+              <a class="button is-button-orange" href="/go_login"> Masuk </a>
+            </div>
+            {% endif %}
           </div>
         </div>
       </div>

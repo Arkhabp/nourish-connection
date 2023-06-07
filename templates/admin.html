@@ -96,7 +96,6 @@
         <tr>
           <th>Username</th>
           <th>Nama Usaha</th>
-          <th>Password</th>
           <th>Kategori</th>
           <th>Daerah</th>
           <th>Sosial Media</th>
@@ -105,34 +104,34 @@
         </tr>
       </thead>
       <tbody>
+        {% for user in users %}
         <tr>
-          <td>user1</td>
-          <td>Usaha 1</td>
-          <td>******</td>
-          <td>Kategori 1</td>
-          <td>Daerah 1</td>
-          <td>@user1</td>
-          <td>Active</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.nama_usaha }}</td>
+          <td>{{ user.kategori }}</td>
+          <td>{{ user.daerah}}</td>
+          <td>{{ user.sosial_media }}</td>
+          <td>{{ user.status }}</td>
           <td>
-            <button class="btn btn-primary">Active</button>
-            <button class="btn btn-danger">Inactive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>user2</td>
-          <td>Usaha 2</td>
-          <td>******</td>
-          <td>Kategori 2</td>
-          <td>Daerah 2</td>
-          <td>@user2</td>
-          <td>Inactive</td>
-          <td>
-            <button class="btn btn-primary">Active</button>
-            <button class="btn btn-danger">Inactive</button>
+            <form action="/admin/update_status" method="POST">
+              <input
+                type="hidden"
+                name="username"
+                value="{{ user.username }}"
+              />
+              <select name="status">
+                <option value="active">Active</option>
+                <option value="nonactive" name="nonactive">Non-active</option>
+              </select>
+              <button type="submit" class="btn btn-primary">
+                Update Status
+              </button>
+            </form>
           </td>
         </tr>
         <!-- Tambahkan baris lainnya sesuai dengan data yang Anda miliki -->
       </tbody>
+      {% endfor %}
     </table>
     <!-- Table Data Stop -->
   </body>

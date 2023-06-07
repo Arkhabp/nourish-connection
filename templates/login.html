@@ -48,6 +48,35 @@
       href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@500;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
       rel="stylesheet"
     />
+
+    <script>
+      function login() {
+        let username = $("#username").val();
+        let password = $("#password").val();
+
+        $.ajax({
+          type: "POST",
+          url: "/login",
+          data: {
+            username_give: username,
+            password_give: password,
+          },
+          success: function (response) {
+            if (response["result"] === "success") {
+              let token = response["token"];
+              $.cookie("mytoken", response["token"], { path: "/" });
+              alert("berhasil login");
+              window.location.replace("/");
+            } else {
+              alert(response["msg"]);
+              if (response["msg"] === "Your account is not active") {
+                $("#login-msg").text("Your account is not active");
+              }
+            }
+          },
+        });
+      }
+    </script>
   </head>
   <body>
     <section
@@ -83,7 +112,7 @@
                       >
                         Daftar
                       </button>
-                    <a/
+                    </a>
                   </li>
                   <li class="nav-item w-50" role="presentation">
                     <button
@@ -114,6 +143,7 @@
                           type="text"
                           class="form-control"
                           placeholder="Username"
+                          name="username"
                           id="username"
                         />
                       </div>
@@ -122,11 +152,14 @@
                           type="password"
                           class="form-control"
                           placeholder="Password"
-                          id="username"
+                          name="password"
+                          id="password"
                         />
                       </div>
                       <button
+                        type="button"
                         class="btn btn-warning text-white mx-auto d-block px-4"
+                        onclick="login()"
                       >
                         Masuk Sebagai UMKM
                       </button>

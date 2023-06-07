@@ -49,61 +49,67 @@
       rel="stylesheet"
     />
 
+    <!-- Custom JS -->
     <script>
       function daftar() {
         let username = $("#username").val();
+        let password = $("#password").val();
         let namaUsaha = $("#nama-usaha").val();
-        let inputPassword = $("#password").val();
         let sosialMedia = $("#sosial-media").val();
         let kategori = $("#kategori").val();
         let daerah = $("#daerah").val();
         let deskripsiUsaha = $("#deskripsi-usaha").val();
 
         if (username === "") {
-          alert("Masukkan username");
+          alert("masukkan username");
           return;
         }
         if (namaUsaha === "") {
-          alert("Masukkan nama usaha");
+          alert("masukkan nama usaha kamu");
           return;
         }
         if (sosialMedia === "") {
-          alert("Masukkan nama sosial media UMKM");
+          alert("masukkan sosial media usaha");
           return;
         }
         if (kategori === "") {
-          alert("Masukkan kategori usaha");
+          alert("masukkan kategori usaha kamu");
           return;
         }
         if (daerah === "") {
-          alert("Masukkan daerah usaha");
+          alert("masukkan daerah usaha kamu");
+          return;
+        }
+        if (password === "") {
+          alert("masukkan pw");
           return;
         }
         if (deskripsiUsaha === "") {
-          alert("Masukkan deskripsi usaha");
+          alert("masukkan deskripsi usaha kamu");
           return;
         }
 
-        let password = inputPassword.val();
-        if (password === "") {
-          alert("Masukkan password anda");
-          return;
-        }
         $.ajax({
-          type: "POST",
           url: "/register_save",
+          type: "POST",
           data: {
             username_give: username,
-            namaUsaha_give: namaUsaha,
             password_give: password,
+            namaUsaha_give: namaUsaha,
             sosialMedia_give: sosialMedia,
             kategori_give: kategori,
             daerah_give: daerah,
             deskripsiUsaha_give: deskripsiUsaha,
           },
           success: function (response) {
-            alert("Berhasil Mendaftar");
-            window.location.replace("/login");
+            alert("berhasil daftar");
+            console.log(response);
+            if (response.result === "success") {
+              window.location.replace("/go_login");
+            }
+          },
+          error: function (error) {
+            console.log(error);
           },
         });
       }
@@ -128,33 +134,22 @@
                 <ul
                   class="nav nav-pills mb-3 mx-auto align-content-center justify-content-center border rounded"
                   id="pills-tab"
-                  role="tablist"
                 >
                   <li class="nav-item w-50" role="presentation">
                     <button
                       class="nav-link active w-100"
-                      id="pills-home-tab"
-                      data-bs-toggle="pill"
-                      data-bs-target="#pills-home"
                       type="button"
-                      role="tab"
-                      aria-controls="pills-home"
                       aria-selected="true"
                     >
                       Daftar
                     </button>
                   </li>
                   <li class="nav-item w-50" role="presentation">
-                    <a href="/login">
+                    <a href="/go_login">
                       <button
                         class="nav-link w-100"
                         id="pills-profile-tab"
-                        data-bs-toggle="pill"
-                        data-bs-target="#pills-profile"
                         type="button"
-                        role="tab"
-                        aria-controls="pills-profile"
-                        aria-selected="false"
                       >
                         Masuk
                       </button>
@@ -175,63 +170,70 @@
                           type="text"
                           class="form-control"
                           placeholder="Username"
+                          name="username"
                           id="username"
                         />
                       </div>
-                      <!-- <div class="form-group mb-3">
+                      <div class="form-group mb-3">
                         <input
                           type="text"
                           class="form-control"
                           placeholder="Nama Usaha"
+                          name="nama-usaha"
                           id="nama-usaha"
                         />
-                      </div> -->
+                      </div>
                       <div class="form-group mb-3">
                         <input
                           type="password"
                           class="form-control"
+                          name="password"
                           placeholder="Password"
+                          name="password"
                           id="password"
                         />
                       </div>
-                      <!-- <div class="form-group mb-3">
+                      <div class="form-group mb-3">
                         <input
                           type="text"
                           class="form-control"
                           placeholder="Sosial Media"
+                          name="sosial-media"
                           id="sosial-media"
                         />
-                      </div> -->
-                      <!-- <div class="form-group mb-3">
+                      </div>
+                      <div class="form-group mb-3">
                         <input
                           type="text"
                           class="form-control"
                           placeholder="Kategori"
+                          name="kategori"
                           id="kategori"
                         />
-                      </div> -->
+                      </div>
 
-                      <!-- <div class="form-group mb-3">
+                      <div class="form-group mb-3">
                         <input
                           type="text"
                           class="form-control"
                           placeholder="Daerah"
+                          name="daerah"
                           id="daerah"
                         />
-                      </div> -->
-                      <!-- <div class="form-group mb-3">
+                      </div>
+                      <div class="form-group mb-3">
                         <textarea
-                          name=""
-                          id=""
                           placeholder="Deskripsi Usaha"
                           class="form-control"
+                          name="deskripsi-usaha"
                           id="deskripsi-usaha"
                         ></textarea>
-                      </div> -->
+                      </div>
 
                       <button
                         class="is-button-orange text-white mx-auto d-block px-4"
                         style="border: 0px; border-radius: 10px"
+                        type="button"
                         onclick="daftar()"
                       >
                         Daftar
