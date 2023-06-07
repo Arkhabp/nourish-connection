@@ -24,6 +24,10 @@ def home():
    
     return render_template('index.html')
 
+@app.route('/admin',methods=['GET'])
+def admin():
+    return render_template('admin.html')
+
 @app.route('/tentang_nourish',methods=['GET'])
 def tentang_nourish():
    
@@ -34,10 +38,14 @@ def umkm_list():
    
     return render_template('umkm-list.html')
 
-@app.route('/diskusi',methods=['GET'])
+@app.route('/diskusi',methods=['POST'])
 def diskusi():
    
     return render_template('diskusi.html')
+
+@app.route('/sign_in',methods=['POST'])
+def sign_in():
+    return render_template("sign-in.html")
 
 @app.route('/login',methods=['GET'])
 def login():
