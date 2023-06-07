@@ -43,9 +43,9 @@ def diskusi():
    
     return render_template('diskusi.html')
 
-@app.route('/sign_in',methods=['POST'])
-def sign_in():
-    return render_template("sign-in.html")
+@app.route('/register',methods=['GET'])
+def register():
+    return render_template("register.html")
 
 @app.route('/login',methods=['GET'])
 def login():
