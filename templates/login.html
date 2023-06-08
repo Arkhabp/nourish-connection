@@ -62,14 +62,22 @@
             password_give: password,
           },
           success: function (response) {
-            if (response["result"] === "success") {
-              let token = response["token"];
-              $.cookie("mytoken", response["token"], { path: "/" });
+            console.log(response);
+            if (response.result === "success") {
+              let token = response.token;
+              $.cookie("mytoken", response.token, { path: "/" });
               alert("berhasil login");
-              window.location.replace("/");
+              if (response.role === "admin") {
+                //baru ditambah
+                window.location.replace("/admin"); //baru ditambah
+              } else {
+                //baru ditambah
+                window.location.replace("/"); //baru ditambah
+              }
+              // window.location.replace("/"); seharusnya
             } else {
-              alert(response["msg"]);
-              if (response["msg"] === "Your account is not active") {
+              alert(response.msg);
+              if (response.msg === "Your account is not active") {
                 $("#login-msg").text("Your account is not active");
               }
             }

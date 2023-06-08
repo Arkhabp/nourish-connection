@@ -35,6 +35,11 @@ def home():
             button_text = 'Masuk'
             button_url = '/login'
         return render_template('index.html', button_text=button_text, button_url=button_url)
+# baru ditambah
+@app.route('/home')
+def go_home():
+    # Logika dan tampilan halaman home
+    return render_template('index.html')
    
 @app.route('/login_admin', methods=['POST'])
 def login_admin():
@@ -62,22 +67,23 @@ def login_admin():
             "msg": "Invalid admin credentials"
         })
     
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'username' in session:
-            # Periksa apakah pengguna memiliki akses admin
-            # Misalnya, dengan memeriksa status pengguna di database
-            username = session['username']
-            user = db.users.find_one({"username": username})
-            if user and user['status'] == 'admin':
-                return f(*args, **kwargs)
-        # Jika pengguna tidak memiliki akses admin, arahkan ke halaman lain
-        return redirect(url_for('home'))
-    return decorated_function
+# def admin_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if 'username' in session:
+#             # Periksa apakah pengguna memiliki akses admin
+#             # Misalnya, dengan memeriksa status pengguna di database
+#             username = session['username']
+#             user = db.users.find_one({"username": username})
+#             if user and user['status'] == 'admin':
+#                 return f(*args, **kwargs)
+#         # Jika pengguna tidak memiliki akses admin, arahkan ke halaman lain
+#         return redirect(url_for('home'))
+#     return decorated_function
 
+# baru diubah
 @app.route('/admin', methods=['GET'])
-@admin_required
+# @admin_required
 def admin():
     users = db.users.find()
     return render_template('admin.html', users=users)
@@ -127,6 +133,13 @@ def register_save():
     db.users.insert_one(doc)
     return jsonify({'result':'success'})
 
+@app.route('/sign_up/check_dup', methods=['POST']) 
+def check_dup():
+     username_receive = request.form.get('username_give')
+     user = db.users.find_one({'username' : username_receive})
+     exists = bool(user)
+     return jsonify({'result':'success', 'exists' : exists})
+
 @app.route('/register',methods=['GET'])
 def register():
     return render_template("register.html")
@@ -172,6 +185,12 @@ def login():
             }
             token = jwt_encode(payload, SECRET_KEY, algorithm='HS256')
 
+            # baru ditambahin
+            if result['role'] == 'admin':
+                return jsonify(result="success", token=token, role=result['role']) #barudiubah
+            else:
+                return jsonify(result="success", token=token, role=result['role']) #barudiubah
+
             return jsonify({
                 "result": "success",
                 "token": token
@@ -182,10 +201,11 @@ def login():
                 "msg": "Your account is not active"
             })
     else:
-        return jsonify({
-            "result": "fail",
-            "msg": "We could not find a user with that id/password combination"
-        })
+        # return jsonify({
+        #     "result": "fail",
+        #     "msg": "We could not find a user with that id/password combination"
+        # })
+        return jsonify(result="fail", msg="We could not find a user with that id/password combination")
 
 @app.route('/profil/<username>',methods=['GET'])
 def user(username):

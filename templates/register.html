@@ -60,6 +60,16 @@
         let daerah = $("#daerah").val();
         let deskripsiUsaha = $("#deskripsi-usaha").val();
 
+        let helpId = $("#help-id");
+
+        if ($(helpId).hasClass("is-danger")) {
+          alert("Please check your id");
+          return;
+        } else if (!$(helpId).hasClass("is-success")) {
+          alert("Please double check your id, something is wrong");
+          return;
+        }
+
         if (username === "") {
           alert("masukkan username");
           return;
@@ -110,6 +120,74 @@
           },
           error: function (error) {
             console.log(error);
+          },
+        });
+      }
+
+      function toggle_sign_up() {
+        // $("#div-sign-in-or-up").toggleClass("is-hidden");
+        // $("#sign-up-box").toggleClass("is-hidden");
+        // $("#btn-check-dup").toggleClass("is-hidden");
+        $("#help-id").toggleClass("is-hidden");
+        // $("#help-password").toggleClass("is-hidden");
+        // $("#help-password2").toggleClass("is-hidden");
+      }
+
+      function is_nickname(asValue) {
+        var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+        return regExp.test(asValue);
+      }
+      function is_password(asValue) {
+        var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+        return regExp.test(asValue);
+      }
+
+      function check_dup() {
+        let inputUsername = $("#username");
+        let helpId = $("#help-id");
+        let username = inputUsername.val();
+
+        if (username === "") {
+          helpId
+            .text("Please enter your id")
+            .removeClass("is-safe")
+            .addClass("is-danger");
+          inputUsername.focus();
+          return;
+        }
+        if (!is_nickname(username)) {
+          helpId
+            .text(
+              "For your id, please enter 2-10 English characters, numbers, or the following special characters (._-)"
+            )
+            .removeClass("is-safe")
+            .addClass("is-danger");
+          inputUsername.focus();
+          return;
+        }
+
+        helpId.addClass("is-loading");
+
+        $.ajax({
+          type: "POST",
+          url: "/sign_up/check_dup",
+          data: {
+            username_give: username,
+          },
+          success: function (response) {
+            if (response["exists"]) {
+              helpId
+                .text("This id is already in use")
+                .removeClass("is-safe")
+                .addClass("is-danger");
+              inputUsername.focus();
+            } else {
+              helpId
+                .text("This id is available for use!")
+                .removeClass("is-danger")
+                .addClass("is-success");
+            }
+            helpId.removeClass("is-loading");
           },
         });
       }
@@ -165,7 +243,7 @@
                     aria-labelledby="pills-home-tab"
                   >
                     <form action="" class="mb-2">
-                      <div class="form-group mb-3">
+                      <div class="form-group d-flex">
                         <input
                           type="text"
                           class="form-control"
@@ -173,7 +251,23 @@
                           name="username"
                           id="username"
                         />
+                        <div class="field has-addons">
+                          <div id="btn-check-dup" class="control">
+                            <button
+                              type="button"
+                              class="button is-sparta is-button-blue"
+                              onclick="check_dup()"
+                            >
+                              Check your id
+                            </button>
+                          </div>
+                        </div>
                       </div>
+                      <p id="help-id" class="help is-blue">
+                        For your id, please enter 2-10 English characters,
+                        numbers, or the following special characters (._-)
+                      </p>
+                      <p id="help-id-login" class="help is-danger"></p>
                       <div class="form-group mb-3">
                         <input
                           type="text"
