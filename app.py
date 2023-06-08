@@ -1,6 +1,7 @@
 from flask import Flask,redirect,url_for,render_template,request, url_for, jsonify, session
 from pymongo import MongoClient
 from jwt import encode as jwt_encode
+import jwt
 from datetime import datetime, timedelta
 import hashlib
 import requests
@@ -16,6 +17,7 @@ dotenv_path = join(dirname(__file__),'.env')
 load_dotenv(dotenv_path)
 
 SECRET_KEY = 'NOURISH'
+TOKEN_KEY='mytoken'
 app.secret_key = 'NOURISH'
 MONGODB_URI = os.environ.get("MONGODB_URI")
 DB_NAME = os.environ.get("DB_NAME")
@@ -25,63 +27,38 @@ db = client[DB_NAME]
 
 @app.route('/',methods=['GET','POST'])
 def home():
-        if request.method == 'POST':
-            # Handle POST Request here
-            return render_template('home.html')
         if 'username' in session:
-            button_text = 'Profil'
-            button_url = '/profil'
+                button_text = 'Profil'
+                button_url = '/profil'
+                user_info = db.users.find_one({'username': session['username']})
+                if user_info is None:
+                    # Jika user_info tidak ditemukan, hapus sesi dan arahkan pengguna ke halaman login
+                    session.clear()
+                    return redirect(url_for('login'))
         else:
             button_text = 'Masuk'
             button_url = '/login'
-        return render_template('index.html', button_text=button_text, button_url=button_url)
+            user_info = None
+
+        return render_template('index.html', button_text=button_text, button_url=button_url, user_info=user_info) 
+    #code sebelumnya 
+        # if request.method == 'POST':
+        #     # Handle POST Request here
+        #     return render_template('home.html')
+        # if 'username' in session:
+        #     button_text = 'Profil'
+        #     button_url = '/profil'
+        # else:
+        #     button_text = 'Masuk'
+        #     button_url = '/login'
+        # print(session)
+        # return render_template('index.html', button_text=button_text, button_url=button_url)
 # baru ditambah
 @app.route('/home')
 def go_home():
     # Logika dan tampilan halaman home
     return render_template('index.html')
    
-@app.route('/login_admin', methods=['POST'])
-def login_admin():
-    username_receive = request.form['username_give']
-    password_receive = request.form['password_give']
-    pw_hash = hashlib.sha256(password_receive.encode("utf-8")).hexdigest()
-
-    result = db.users.find_one(
-        {
-            "username": username_receive,
-            "password": pw_hash,
-            "status": "admin"
-        }
-    )
-
-    if result:
-        session['username'] = result['username']
-        return jsonify({
-            "result": "success",
-            "msg": "Login successful"
-        })
-    else:
-        return jsonify({
-            "result": "fail",
-            "msg": "Invalid admin credentials"
-        })
-    
-# def admin_required(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if 'username' in session:
-#             # Periksa apakah pengguna memiliki akses admin
-#             # Misalnya, dengan memeriksa status pengguna di database
-#             username = session['username']
-#             user = db.users.find_one({"username": username})
-#             if user and user['status'] == 'admin':
-#                 return f(*args, **kwargs)
-#         # Jika pengguna tidak memiliki akses admin, arahkan ke halaman lain
-#         return redirect(url_for('home'))
-#     return decorated_function
-
-# baru diubah
 @app.route('/admin', methods=['GET'])
 # @admin_required
 def admin():
@@ -146,26 +123,51 @@ def register():
 
 @app.route('/tentang_nourish',methods=['GET'])
 def tentang_nourish():
-   
-    return render_template('tentang-nourish.html')
+        if 'username' in session:
+            button_text = 'Profil'
+            button_url = '/profil'
+            user_info = db.users.find_one({'username': session['username']})
+            if user_info is None:
+                # Jika user_info tidak ditemukan, hapus sesi dan arahkan pengguna ke halaman login
+                session.clear()
+                return redirect(url_for('login'))
+        else:
+            button_text = 'Masuk'
+            button_url = '/login'
+            user_info = None
+
+        return render_template('tentang-nourish.html', button_text=button_text, button_url=button_url, user_info=user_info)     
+    
 
 @app.route('/umkm_list',methods=['GET'])
 def umkm_list():
-   
-    return render_template('umkm-list.html')
+    if 'username' in session:
+            button_text = 'Profil'
+            button_url = '/profil'
+            user_info = db.users.find_one({'username': session['username']})
+            if user_info is None:
+                # Jika user_info tidak ditemukan, hapus sesi dan arahkan pengguna ke halaman login
+                session.clear()
+                return redirect(url_for('login'))
+    else:
+        button_text = 'Masuk'
+        button_url = '/login'
+        user_info = None
+    return render_template('umkm-list.html', button_text=button_text, button_url=button_url, user_info=user_info)   
+
 
 @app.route('/diskusi',methods=['POST'])
 def diskusi():
    
     return render_template('diskusi.html')
 
-@app.route('/go_login', methods=['GET'])
-def go_login():
+@app.route('/login', methods=['GET'])
+def login():
     msg=request.args.get('msg')
     return render_template('login.html', msg=msg)
 
-@app.route('/login',methods=['POST'])
-def login():
+@app.route('/go_login',methods=['POST'])
+def go_login():
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
     pw_hash = hashlib.sha256(password_receive.encode("utf-8")).hexdigest()
@@ -207,10 +209,35 @@ def login():
         # })
         return jsonify(result="fail", msg="We could not find a user with that id/password combination")
 
-@app.route('/profil/<username>',methods=['GET'])
+@app.route('/user/<username>',methods=['GET'])
 def user(username):
-   
-    return render_template('profil.html')
+    button_text = 'Profil'
+    button_url = '/profil'
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(
+            token_receive,
+            SECRET_KEY,
+            algorithms=['HS256']
+        )
+        status = username == payload.get('id')
+        user_info = db.users.find_one(
+            {'username' : username}, 
+            {'_id' : False}
+        )
+        if user_info is None:
+            user_info = {}  # Inisialisasi user_info sebagai dictionary kosong jika tidak ditemukan
+        return render_template(
+           'user.html', button_text=button_text, button_url=button_url, user_info=user_info, status=status
+        )
+        # return render_template('user.html', button_text=button_text, button_url=button_url, user_info=user_info, status=status)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+    # return render_template('profil.html')
+
+@app.route('/profil', methods=['GET'])
+def profil():
+    return render_template('user.html') 
 
 @app.route('/umkm_page',methods = ['GET'])
 def umkm_page():

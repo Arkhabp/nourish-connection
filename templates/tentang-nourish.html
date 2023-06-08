@@ -97,9 +97,20 @@
             <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
           </div>
           <div class="navbar-item">
+            {% if 'username' in session %} {% if user_info is defined %}
             <div class="buttons">
-              <a class="button is-button-orange" href="/admin"> Masuk </a>
+              <a
+                class="button is-button-orange"
+                href="/user/{{ user_info.username }}"
+              >
+                Profil
+              </a>
             </div>
+            {% endif %} {% else %}
+            <div class="buttons">
+              <a class="button is-button-orange" href="/login"> Masuk </a>
+            </div>
+            {% endif %}
           </div>
         </div>
       </div>

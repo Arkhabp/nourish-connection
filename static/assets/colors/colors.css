@@ -27,3 +27,8 @@
   .is-black{
     color: #1D1B1B;
   }
+  .is-active{
+    background-color: blue;
+    color: white;
+  }
+  

@@ -77,23 +77,6 @@
         -webkit-line-clamp: 5; /* Jumlah baris yang ingin ditampilkan */
       }
     </style>
-
-    <script>
-      // function save_data() {
-      //   let nama = $("#coba").val();
-
-      //   $.ajax({
-      //     type: "POST",
-      //     url: "/save_coba",
-      //     data: {
-      //       nama_give: nama,
-      //     },
-      //     success: function (response) {
-      //       alert("data berhasil disimpan");
-      //     },
-      //   });
-      // }
-    </script>
   </head>
   <body>
     <!-- Navbar Start -->
@@ -127,13 +110,18 @@
             <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
           </div>
           <div class="navbar-item">
-            {% if 'username' in session %}
+            {% if 'username' in session %} {% if user_info is defined %}
             <div class="buttons">
-              <a class="button is-button-orange" href="/profil"> Profil </a>
+              <a
+                class="button is-button-orange"
+                href="/user/{{ user_info.username }}"
+              >
+                Profil
+              </a>
             </div>
-            {% else %}
+            {% endif %} {% else %}
             <div class="buttons">
-              <a class="button is-button-orange" href="/go_login"> Masuk </a>
+              <a class="button is-button-orange" href="/login"> Masuk </a>
             </div>
             {% endif %}
           </div>
@@ -160,12 +148,21 @@
           Impian - Bersama Nourish Connection. <br />
           <b class="is-blue">Bawa Bisnis Anda ke Level Berikutnya!</b>
         </p>
+        {% if 'username' in session %}
+        <a href="/" class="is-hidden">
+          <h3 class="is-orange is-button-text">
+            Buat akun
+            <i class="fa-solid fa-arrow-right is-orange fa-rotate-75"></i>
+          </h3>
+        </a>
+        {% else %}
         <a href="/">
           <h3 class="is-orange is-button-text">
             Buat akun
             <i class="fa-solid fa-arrow-right is-orange fa-rotate-75"></i>
           </h3>
         </a>
+        {% endif %}
       </div>
     </section>
     <!-- Web Description Stop -->
