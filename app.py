@@ -275,7 +275,7 @@ def profil():
 def umkm_page():
      return render_template('umkm-page.html')
 
-@app.route('/diskusi',methods=['POST'])
+@app.route('/diskusi',methods=['GET'])
 def diskusi():
    
     return render_template('diskusi.html')
