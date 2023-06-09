@@ -57,7 +57,21 @@ def home():
 @app.route('/home')
 def go_home():
     # Logika dan tampilan halaman home
-    return render_template('index.html')
+        if 'username' in session:
+            button_text = 'Profil'
+            button_url = '/profil'
+            user_info = db.users.find_one({'username': session['username']})
+            if user_info is None:
+                # Jika user_info tidak ditemukan, hapus sesi dan arahkan pengguna ke halaman login
+                session.clear()
+                return redirect(url_for('login'))
+        else:
+            button_text = 'Masuk'
+            button_url = '/login'
+            user_info = None
+
+        return render_template('index.html', button_text=button_text, button_url=button_url, user_info=user_info)   
+    
    
 @app.route('/admin', methods=['GET'])
 # @admin_required
@@ -105,7 +119,12 @@ def register_save():
         "kategori" : kategori_receive,
         "daerah" : daerah_receive,
         "deskripsi_usaha" : deskripsiUsaha_receive,
-        "status" : "nonactive"
+        "profile_pic": "",
+        "profile_pic_real": "profil_pics/profile_placeholder.jpg",
+        "cover_pic": "",
+        "cover_pic_real": "cover_pics/cover_placeholder.jpeg",
+        "status" : "nonactive",
+        "role" : "umkm"
     }
     db.users.insert_one(doc)
     return jsonify({'result':'success'})
@@ -155,12 +174,6 @@ def umkm_list():
         user_info = None
     return render_template('umkm-list.html', button_text=button_text, button_url=button_url, user_info=user_info)   
 
-
-@app.route('/diskusi',methods=['POST'])
-def diskusi():
-   
-    return render_template('diskusi.html')
-
 @app.route('/login', methods=['GET'])
 def login():
     msg=request.args.get('msg')
@@ -208,6 +221,25 @@ def go_login():
         #     "msg": "We could not find a user with that id/password combination"
         # })
         return jsonify(result="fail", msg="We could not find a user with that id/password combination")
+    
+@app.route('/logout')
+def logout():
+# Logika dan tampilan halaman home
+    if 'username' in session:
+        button_text = 'keluar'
+        button_url = '/'
+        user_info = db.users.find_one({'username': session['username']})
+        session.clear()
+        if user_info is None:
+            # Jika user_info tidak ditemukan, hapus sesi dan arahkan pengguna ke halaman login
+            session.clear()
+            return redirect(url_for('login'))
+    else:
+        button_text = 'Masuk'
+        button_url = '/login'
+        user_info = None
+
+    return render_template('index.html', button_text=button_text, button_url=button_url, user_info=user_info)   
 
 @app.route('/user/<username>',methods=['GET'])
 def user(username):
@@ -242,6 +274,11 @@ def profil():
 @app.route('/umkm_page',methods = ['GET'])
 def umkm_page():
      return render_template('umkm-page.html')
+
+@app.route('/diskusi',methods=['POST'])
+def diskusi():
+   
+    return render_template('diskusi.html')
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD

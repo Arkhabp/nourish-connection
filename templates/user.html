@@ -48,6 +48,14 @@
       href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@500;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
       rel="stylesheet"
     />
+
+    <script>
+      function sign_out() {
+        $.removeCookie("mytoken", { path: "/" });
+        alert("Signed out!");
+        window.location.href = "/logout";
+      }
+    </script>
   </head>
   <body>
     <!-- Navbar Start -->
@@ -83,7 +91,12 @@
           <div class="navbar-item">
             {% if 'username' in session %}
             <div class="buttons">
-              <a class="button is-button-orange" href="/profil"> Profil </a>
+              <a
+                class="button is-button-orange"
+                href="/user/{{ user_info.username }}"
+              >
+                Profil
+              </a>
             </div>
             {% else %}
             <div class="buttons">
@@ -96,6 +109,152 @@
     </nav>
     <!-- Navbar Stop -->
 
-    <h1>halaman user</h1>
+    <!-- Photo Profile Section Start-->
+    <section class="about-bg columns">
+      <div class="mx-2 column">
+        <div class="is-flex-grow-1" style="position: relative">
+          <div
+            class="image-container"
+            style="position: relative; height: 0; padding-bottom: 22%"
+          >
+            <img
+              src="{{ url_for('static', filename=user_info.cover_pic_real) }}"
+              class="img-fluid"
+              style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 10px;
+              "
+              alt="Gambar"
+              id="sampul-profil"
+            />
+          </div>
+          <div
+            style="
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              padding-left: 0.7%;
+              padding-bottom: -1%;
+            "
+          >
+            <div
+              style="
+                width: 120px;
+                height: 120px;
+                border-width: 10px;
+                border-color: white;
+                border-radius: 50%;
+                overflow: hidden;
+                display: inline-block;
+              "
+              class="gambar"
+            >
+              <img
+                src="{{ url_for('static', filename=user_info.profile_pic_real) }}"
+                style="width: 100%; height: 100%; display: block"
+                alt="profile photo"
+                id="foto-profil"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Photo Profile Section Stop-->
+
+    <!-- Data User Profil Start -->
+    <section class="container">
+      <div class="col-md-9 mx-auto">
+        <div class="card rounded">
+          <div>
+            <div class="container mt-4 px-5 py-3">
+              <form action="" class="mb-2">
+                <div class="form-group mb-4 is-align-items-center">
+                  <strong class="mr-2 is-blue">Nama Usaha</strong>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="nama-usaha"
+                    id="nama-usaha"
+                    value="{{user_info.nama_usaha}}"
+                    readonly
+                  />
+                </div>
+                <div class="form-group mb-4 is-align-items-center">
+                  <strong class="mr-2 is-blue">Kategori</strong>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="kategori"
+                    id="kategori"
+                    value="{{user_info.kategori}}"
+                    readonly
+                  />
+                </div>
+                <div class="form-group mb-4 is-align-items-center">
+                  <strong class="mr-2 is-blue">Daerah</strong>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="daerah"
+                    id="daerah"
+                    value="{{user_info.daerah}}"
+                    readonly
+                  />
+                </div>
+                <div class="form-group mb-4 is-align-items-center">
+                  <strong class="mr-2 is-blue">Sosial Media (Instagram)</strong>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="sosial-media"
+                    id="sosial-media"
+                    value="{{user_info.sosial_media}}"
+                    readonly
+                  />
+                </div>
+                <div class="form-group mb-4 is-align-items-center">
+                  <strong class="mr-2 is-blue">Deskripsi Usaha</strong>
+                  <textarea
+                    type="text"
+                    class="form-control"
+                    name="deskripsi-usaha"
+                    id="deskripsi-usaha"
+                    readonly
+                  >
+{{user_info.deskripsi_usaha}}</textarea
+                  >
+                </div>
+                <div class="d-flex" style="flex-direction: row-reverse">
+                  <div class="button-logout border-radius-20 ml-4">
+                    <a class="button is-button-red" onclick="sign_out()">
+                      Keluar
+                    </a>
+                  </div>
+                  <div class="button-edit-profil border-radius-20">
+                    <a class="button is-button-blue" onclick="sign_out()">
+                      Edit profil
+                    </a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Data User Profil Start -->
+
+    <!-- Footer Start -->
+    <footer class="my-5">
+      <div class="content has-text-centered">
+        <p class="is-blue">2023 Nourish Connection</p>
+      </div>
+    </footer>
+    <!-- Footer Stop -->
   </body>
 </html>

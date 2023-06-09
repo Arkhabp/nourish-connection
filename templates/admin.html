@@ -48,6 +48,14 @@
       href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@500;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
       rel="stylesheet"
     />
+
+    <script>
+      function sign_out() {
+        $.removeCookie("mytoken", { path: "/" });
+        alert("Signed out!");
+        window.location.href = "/logout";
+      }
+    </script>
   </head>
   <body>
     <!-- Navbar Start -->
@@ -82,7 +90,9 @@
           </div>
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-button-orange"> Keluar </a>
+              <a class="button is-button-orange" onclick="sign_out()">
+                Keluar
+              </a>
             </div>
           </div>
         </div>

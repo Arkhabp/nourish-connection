@@ -115,7 +115,7 @@
             alert("berhasil daftar");
             console.log(response);
             if (response.result === "success") {
-              window.location.replace("/go_login");
+              window.location.replace("/login");
             }
           },
           error: function (error) {
@@ -291,7 +291,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          placeholder="Sosial Media"
+                          placeholder="Sosial Media (instagram)"
                           name="sosial-media"
                           id="sosial-media"
                         />
