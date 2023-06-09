@@ -267,10 +267,54 @@ def user(username):
         return redirect(url_for("home"))
     # return render_template('profil.html')
 
-@app.route('/profil', methods=['GET'])
-def profil():
-    return render_template('user.html') 
+@app.route('/update_profile', methods = ['POST'])
+def update_profile():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(
+            token_receive,
+            SECRET_KEY,
+            algorithms=['HS256']
+        )
+        username = payload.get('id')
 
+        sosialMedia_receive = request.form['sosialMedia_give']
+        deskripsi_receive = request.form['deskripsi_give']
+        
+        new_doc = {
+            'sosial_media' : sosialMedia_receive,
+            'deskripsi_usaha' : deskripsi_receive
+        }
+        if 'sampul_give' in request.files:
+            file = request.files['sampul_give']
+            filename = secure_filename(file.filename)
+            extension = filename.split('.')[-1]
+            file_path = f'cover_pics/{username}.{extension}'
+            file.save('./static/' + file_path)
+            new_doc['cover_pic'] = filename
+            new_doc['cover_pic_real'] = file_path
+
+        if 'profile_give' in request.files:
+            file = request.files['profile_give']
+            filename = secure_filename(file.filename)
+            extension = filename.split('.')[-1]
+            file_path = f'profil_pics/{username}.{extension}'
+            file.save('./static/' + file_path)
+            new_doc['profile_pic'] = filename
+            new_doc['profile_pic_real'] = file_path
+
+        db.users.update_one(
+            {'username' : username},
+            {'$set' : new_doc}
+        )
+
+        return jsonify({
+            'result': 'success',
+            'msg' : 'Your profile has been update'
+        })
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+    
 @app.route('/umkm_page',methods = ['GET'])
 def umkm_page():
      return render_template('umkm-page.html')
@@ -279,6 +323,14 @@ def umkm_page():
 def diskusi():
    
     return render_template('diskusi.html')
+
+@app.route('/show_preview_umkm', methods = ['GET'])
+def show_preview_umkm_get():
+        namaUsaha= list(db.users.find({}, {'_id': False}).sort('username', -1))
+        return jsonify({
+            'namausaha' : namaUsaha,
+        })
+         
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD
