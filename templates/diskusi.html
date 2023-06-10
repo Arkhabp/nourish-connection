@@ -78,10 +78,14 @@
           <div class="navbar-start">
             <a class="navbar-item" href="/tentang_nourish"> Tentang Nourish </a>
             <a class="navbar-item" href="/umkm_list"> UMKM </a>
+            {% if 'username' in session %}
             <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
+            {% else %}
+            <a class="navbar-item is-hidden" href="/diskusi"> Diskusi UMKM </a>
+            {% endif %}
           </div>
           <div class="navbar-item">
-            {% if 'username' in session %}
+            {% if 'username' in session %} {% if user_info is defined %}
             <div class="buttons">
               <a
                 class="button is-button-orange"
@@ -90,7 +94,7 @@
                 Profil
               </a>
             </div>
-            {% else %}
+            {% endif %} {% else %}
             <div class="buttons">
               <a class="button is-button-orange" href="/login"> Masuk </a>
             </div>

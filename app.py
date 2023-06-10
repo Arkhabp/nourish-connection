@@ -321,8 +321,19 @@ def umkm_page():
 
 @app.route('/diskusi',methods=['GET'])
 def diskusi():
-   
-    return render_template('diskusi.html')
+    if 'username' in session:
+            button_text = 'Profil'
+            button_url = '/profil'
+            user_info = db.users.find_one({'username': session['username']})
+            if user_info is None:
+                # Jika user_info tidak ditemukan, hapus sesi dan arahkan pengguna ke halaman login
+                session.clear()
+                return redirect(url_for('login'))
+    else:
+        button_text = 'Masuk'
+        button_url = '/login'
+        user_info = None
+    return render_template('diskusi.html', button_text=button_text, button_url=button_url, user_info=user_info)   
 
 @app.route('/show_preview_umkm', methods = ['GET'])
 def show_preview_umkm_get():

@@ -54,6 +54,7 @@
       function daftar() {
         let username = $("#username").val();
         let password = $("#password").val();
+        let password2 = $("#password2").val();
         let namaUsaha = $("#nama-usaha").val();
         let sosialMedia = $("#sosial-media").val();
         let kategori = $("#kategori").val();
@@ -61,41 +62,93 @@
         let deskripsiUsaha = $("#deskripsi-usaha").val();
 
         let helpId = $("#help-id");
+        let helpPassword = $("#help-password");
+        let helpPassword2 = $("#help-password2");
+        let helpNamaUsaha = $("#help-nama-usaha");
+        let helpSosialMedia = $("#help-sosial-media");
+        let helpKategori = $("#help-kategori");
+        let helpDaerah = $("#help-daerah");
+        let helpDeskripsi = $("#help-deskripsi");
 
-        if ($(helpId).hasClass("is-danger")) {
-          alert("Please check your id");
-          return;
-        } else if (!$(helpId).hasClass("is-success")) {
-          alert("Please double check your id, something is wrong");
+        if (
+          deskripsiUsaha === "" &&
+          password === "" &&
+          password2 === "" &&
+          namaUsaha === "" &&
+          sosialMedia === "" &&
+          kategori === "" &&
+          daerah === "" &&
+          deskripsiUsaha === ""
+        ) {
+          alert("hi");
           return;
         }
-
         if (username === "") {
-          alert("masukkan username");
-          return;
+          helpId
+            .text("Masukkan username anda")
+            .removeClass("is-blue")
+            .addClass("is-danger");
+        } else if (!$(helpId).hasClass("is-success")) {
+          alert("Cek kembali username kamu, ada yang salah!");
         }
+
+        if (password === "") {
+          helpPassword
+            .text("Masukkan password anda")
+            .removeClass("is-blue")
+            .addClass("is-red");
+        }
+        if (!is_password(password)) {
+          helpPassword
+            .text(
+              "Untuk password kamu, masukkan 8-20 karaket,nomor, atau menggunakan special characters (!@#$%^&*)"
+            )
+            .removeClass("is-blue")
+            .addClass("is-danger");
+        }
+        if (is_password(password)) {
+          helpPassword
+            .text("Pasword bisa digunakan!!!")
+            .removeClass("is-danger")
+            .addClass("is-success");
+        }
+
+        if (password2 === "") {
+          helpPassword2
+            .text("Masukkan password kamu kembali")
+            .removeClass("is-hidden")
+            .addClass("is-danger");
+        }
+
         if (namaUsaha === "") {
-          alert("masukkan nama usaha kamu");
-          return;
+          helpNamaUsaha
+            .text("Masukkan nama usaha kamu")
+            .removeClass("is-hidden")
+            .addClass("is-danger");
         }
         if (sosialMedia === "") {
-          alert("masukkan sosial media usaha");
-          return;
+          helpSosialMedia
+            .text("Masukkan sosial media (instagram) usaha kamu")
+            .removeClass("is-hidden")
+            .addClass("is-danger");
         }
         if (kategori === "") {
-          alert("masukkan kategori usaha kamu");
-          return;
+          helpKategori
+            .text("Masukkan kategori usaha kamu")
+            .removeClass("is-hidden")
+            .addClass("is-danger");
         }
         if (daerah === "") {
-          alert("masukkan daerah usaha kamu");
-          return;
-        }
-        if (password === "") {
-          alert("masukkan pw");
-          return;
+          helpDaerah
+            .text("Masukkan daerah usaha kamu")
+            .removeClass("is-hidden")
+            .addClass("is-danger");
         }
         if (deskripsiUsaha === "") {
-          alert("masukkan deskripsi usaha kamu");
+          helpDeskripsi
+            .text("Masukkan deskripsi usaha kamu")
+            .removeClass("is-hidden")
+            .addClass("is-danger");
           return;
         }
 
@@ -129,8 +182,8 @@
         // $("#sign-up-box").toggleClass("is-hidden");
         // $("#btn-check-dup").toggleClass("is-hidden");
         $("#help-id").toggleClass("is-hidden");
-        // $("#help-password").toggleClass("is-hidden");
-        // $("#help-password2").toggleClass("is-hidden");
+        $("#help-password").toggleClass("is-hidden");
+        $("#help-password2").toggleClass("is-hidden");
       }
 
       function is_nickname(asValue) {
@@ -149,7 +202,7 @@
 
         if (username === "") {
           helpId
-            .text("Please enter your id")
+            .text("Masukkan username anda")
             .removeClass("is-safe")
             .addClass("is-danger");
           inputUsername.focus();
@@ -158,7 +211,7 @@
         if (!is_nickname(username)) {
           helpId
             .text(
-              "For your id, please enter 2-10 English characters, numbers, or the following special characters (._-)"
+              "Untuk username kamu, masukkan 2-10 karakter, nomor, atau menggunakan special characters (._-)"
             )
             .removeClass("is-safe")
             .addClass("is-danger");
@@ -177,13 +230,13 @@
           success: function (response) {
             if (response["exists"]) {
               helpId
-                .text("This id is already in use")
+                .text("Username ini sudah digunakan")
                 .removeClass("is-safe")
                 .addClass("is-danger");
               inputUsername.focus();
             } else {
               helpId
-                .text("This id is available for use!")
+                .text("Username ini bisa diguanakan!")
                 .removeClass("is-danger")
                 .addClass("is-success");
             }
@@ -255,7 +308,7 @@
                           <div id="btn-check-dup" class="control">
                             <button
                               type="button"
-                              class="button is-sparta is-button-blue"
+                              class="button is-sparta is-button-blue is-bold"
                               onclick="check_dup()"
                             >
                               Check your id
@@ -263,11 +316,35 @@
                           </div>
                         </div>
                       </div>
-                      <p id="help-id" class="help is-blue">
-                        For your id, please enter 2-10 English characters,
-                        numbers, or the following special characters (._-)
+                      <p id="help-id" class="help is-blue mb-2">
+                        Untuk username kamu, masukkan 2-10 karakter, nomor, atau
+                        menggunakan special characters (._-)
                       </p>
-                      <p id="help-id-login" class="help is-danger"></p>
+                      <div class="form-group">
+                        <input
+                          type="password"
+                          class="form-control"
+                          placeholder="Password"
+                          name="password"
+                          id="password"
+                        />
+                      </div>
+                      <p id="help-password" class="help mb-2 is-blue">
+                        Untuk password kamu, masukkan 8-20 karaket,nomor, atau
+                        menggunakan special characters (!@#$%^&*)
+                      </p>
+                      <div class="form-group mb-3">
+                        <input
+                          type="password"
+                          class="form-control"
+                          name="password2"
+                          placeholder="Konfirmasi password anda"
+                          id="password2"
+                        />
+                      </div>
+                      <p id="help-password2" class="help mb-2 is-hidden">
+                        Konfirmasi password kamu salah
+                      </p>
                       <div class="form-group mb-3">
                         <input
                           type="text"
@@ -277,16 +354,9 @@
                           id="nama-usaha"
                         />
                       </div>
-                      <div class="form-group mb-3">
-                        <input
-                          type="password"
-                          class="form-control"
-                          name="password"
-                          placeholder="Password"
-                          name="password"
-                          id="password"
-                        />
-                      </div>
+                      <p id="help-nama-usaha" class="help mb-2 is-hidden">
+                        Masukkan nama usaha kamu
+                      </p>
                       <div class="form-group mb-3">
                         <input
                           type="text"
@@ -296,6 +366,9 @@
                           id="sosial-media"
                         />
                       </div>
+                      <p id="help-sosial-media" class="help mb-2 is-hidden">
+                        Masukkan sosial media (instagram) usaha kamu
+                      </p>
                       <div class="form-group mb-3">
                         <input
                           type="text"
@@ -305,7 +378,9 @@
                           id="kategori"
                         />
                       </div>
-
+                      <p id="help-kategori" class="help mb-2 is-hidden">
+                        Masukkan kategori usaha kamu
+                      </p>
                       <div class="form-group mb-3">
                         <input
                           type="text"
@@ -315,7 +390,10 @@
                           id="daerah"
                         />
                       </div>
-                      <div class="form-group mb-3">
+                      <p id="help-daerah" class="help mb-2 is-hidden">
+                        Masukkan daerah usaha kamu
+                      </p>
+                      <div class="form-group mb-5">
                         <textarea
                           placeholder="Deskripsi Usaha"
                           class="form-control"
@@ -323,7 +401,9 @@
                           id="deskripsi-usaha"
                         ></textarea>
                       </div>
-
+                      <p id="help-nama-usaha" class="help mb-2 is-hidden">
+                        Masukkan deskripsi usaha kamu
+                      </p>
                       <button
                         class="is-button-orange text-white mx-auto d-block px-4"
                         style="border: 0px; border-radius: 10px"
