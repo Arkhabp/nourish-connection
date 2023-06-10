@@ -315,9 +315,30 @@ def update_profile():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
     
+@app.route('/show_umkm_page',methods = ['GET'])
+def umkm_profile():
+        namaUsaha= list(db.users.find({}, {'_id': False}))
+        return jsonify({
+            'namausaha' : namaUsaha,
+        })
+
 @app.route('/umkm_page',methods = ['GET'])
 def umkm_page():
-     return render_template('umkm-page.html')
+    button_text = 'Profil'
+    button_url = '/profil'
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        user_info = db.users.find_one(
+        {'_id' : False}
+        )
+        if user_info is None:
+            user_info = {}  # Inisialisasi user_info sebagai dictionary kosong jika tidak ditemukan
+        return render_template(
+           'umkm-page.html', button_text=button_text, button_url=button_url, user_info=user_info, 
+        )
+        # return render_template('user.html', button_text=button_text, button_url=button_url, user_info=user_info, status=status)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 @app.route('/diskusi',methods=['GET'])
 def diskusi():
