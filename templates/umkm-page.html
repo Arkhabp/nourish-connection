@@ -18,7 +18,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
     />
-   <!-- style css -->
+    <!-- style css -->
     <link
       href="{{ url_for('static', filename='assets/colors/colors.css') }}"
       rel="stylesheet"
@@ -58,92 +58,94 @@
     <!-- Script Start-->
     <script>
       $(document).ready(function () {
-        show_umkm_page();
+        getUmkmData();
       });
-      function show_umkm_page() {
-        $("#umkm-desc").empty();
+
+      function getUmkmData() {
+        var namaUsaha = $.cookie("namaUsaha"); // Ambil namaUsaha yang dipilih dari cookie
         $.ajax({
           type: "GET",
-          url: "/show_umkm_page",
-          data: {},
+          url: "/show_preview_umkm",
+          data: { namaUsaha: namaUsaha }, // Kirim namaUsaha sebagai parameter permintaan
           success: function (response) {
-            let cards = response["namausaha"];
-            console.log(cards);
-            for (let i = 0; i < 4; i++) {
-              let namaUsaha = cards[i]["nama_usaha"];
-              let daerah = cards[i]["daerah"];
-              let deskripsi = cards[i]["deskripsi_usaha"];
-              let cover = cards[i]["cover_pic_real"];
-              let temp_html = `
-              <div class="mr-2 ml-2 column is-flex">
-                <div class="is-flex-grow-1" style="position: relative">
-                  <div
-                    class="image-container"
-                    style="position: relative; height: 0; padding-bottom: 22%"
-                  >
-                    <img
-                      src="{{ url_for('static', filename='assets/dummy-image/dummy-photo-umkm2.jpg') }}"
-                      class="img-fluid"
+            let namaUsaha = response["namausaha"][0]["nama_usaha"];
+            let daerah = response["namausaha"][0]["daerah"];
+            let deskripsi = response["namausaha"][0]["deskripsi_usaha"];
+            let cover = response["namausaha"][0]["cover_pic_real"];
+            let sosialMedia = response["namausaha"][0]["sosial_media"];
+
+            let temp_html = `
+                    <div id="umkm-desc" class="about-bg columns is-align-items-center">
+                <div class="mr-2 ml-2 column is-flex">
+                  <div class="is-flex-grow-1" style="position: relative">
+                    <div
+                      class="image-container"
+                      style="position: relative; height: 0; padding-bottom: 22%"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='')}}${cover}"
+                        class="img-fluid"
+                        style="
+                          position: absolute;
+                          top: 0;
+                          left: 0;
+                          width: 100%;
+                          height: 100%;
+                          border-radius: 10px;
+                          filter: brightness(0.7);
+                        "
+                        alt="Gambar"
+                        id="sampul-profil"
+                      />
+                    </div>
+                    <div
+                      class="centered-text"
                       style="
                         position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        border-radius: 10px;
-                        filter: brightness(0.7);
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        text-align: center;
                       "
-                      alt="Gambar"
-                      id="sampul-profil"
-                    />
-                  </div>
-                  <div
-                  class="centered-text"
-                    style="
-                      position: absolute;
-                      top: 50%;
-                      left: 50%;
-                      transform: translate(-50%, -50%);
-                      text-align: center;
-                    "
-                  >
-                      <p class="title is-1 is-white">
-                        TOKO HIAS KAYU
-                      </p>
-                      <p class="subtitle is-2 is-white">
-                        Surabaya
-                      </p>
-                  </div>
-                </div>
-                 <!-- UMKM Description Stop -->
-                <!-- UMKM Deskripsi Usaha Start-->
-                <div class="box">
-                  <div class="media-content">
-                      <div class="content"> <!--user_info.deskripsi_usaha -->
-                          <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Odio euismod lacinia at quis. Purus non enim praesent elementum facilisis leo vel fringilla. Integer feugiat scelerisque varius morbi enim nunc faucibus a. Dictumst vestibulum rhoncus est pellentesque. Commodo elit at imperdiet dui accumsan sit amet. Accumsan sit amet nulla facilisi morbi tempus iaculis. Massa enim nec dui nunc mattis enim ut. Nulla facilisi nullam vehicula ipsum. Amet purus gravida quis blandit. Habitasse platea dictumst quisque sagittis purus sit.
-                                  <br><br>
-                                  Dui id ornare arcu odio ut sem nulla. Dis parturient montes nascetur ridiculus mus. Quis eleifend quam adipiscing vitae proin. Lorem ipsum dolor sit amet consectetur. Fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Id cursus metus aliquam eleifend mi in. Id consectetur purus ut faucibus pulvinar elementum. Pretium fusce id velit ut tortor pretium viverra suspendisse. Laoreet id donec ultrices tincidunt arcu non sodales. Viverra orci sagittis eu volutpat odio facilisis mauris sit. Justo nec ultrices dui sapien eget mi proin sed libero. Maecenas volutpat blandit aliquam etiam erat velit. Ornare arcu odio ut sem nulla pharetra diam. Tortor pretium viverra suspendisse potenti.
-                                  non ante </a>. Phasellus lacus ex, semper ac tortor nec, fringilla condimentum orci. Fusce eu rutrum tellus. </p>
-                          </p>
-                          <blockquote> <h4> Sosial Media </h4> <!-- user_info.social_media-->
-                            <ul>
-                                <li> In fermentum leo eu lectus mollis, quis dictum mi aliquet. </li>
-                                <li> Morbi eu nulla lobortis, lobortis est in, fringilla felis. </li>
-                                <li> Aliquam nec felis in sapien venenatis viverra fermentum nec lectus. </li>
-                                <li> Ut non enim metus. </li>
-                              </ul>
-                        </blockquote>
-                      </div>
+                    >
+                      <p class="title is-1 is-white">${namaUsaha}</p>
+                      <p class="subtitle is-2 is-white">${daerah}</p>
                     </div>
                   </div>
-              `;
-              $("#preview-list").append(temp_html);
-            }
+                  <!-- UMKM Sampul Stop -->
+                </div>
+              </div>
+
+              <!-- UMKM Deskripsi Usaha Start-->
+              <div class="box">
+                <div class="media-content">
+                  <div class="content">
+                    <!--user_info.deskripsi_usaha -->
+                    <p class="deskripsi-usaha">${deskripsi}</p>
+                    <blockquote>
+                      <h4>Sosial Media</h4>
+                      <!-- user_info.social_media-->
+                      <ul>
+                        <li>
+                          ${sosialMedia}
+                        </li>
+                      </ul>
+                    </blockquote>
+                  </div>
+                </div>
+              </div>
+            `;
+
+            // Update konten halaman dengan data yang diperoleh
+            $("#umkm-page").html(temp_html);
           },
         });
       }
-    </script> 
+
+      function send_data(namaUsaha) {
+        $.cookie("namaUsaha", namaUsaha); // Simpan namaUsaha yang dipilih dalam cookie
+      }
+    </script>
     <!-- Script End-->
   </head>
 
@@ -203,85 +205,17 @@
     </nav>
     <!-- Navbar Stop -->
 
-    <!-- UMKM Description Start -->
-    <section id="umkm-desc" class="about-bg columns is-align-items-center">
-        <div class="mr-2 ml-2 column is-flex">
-          <div class="is-flex-grow-1" style="position: relative">
-            <div
-              class="image-container"
-              style="position: relative; height: 0; padding-bottom: 22%"
-            >
-              <img
-                src="{{ url_for('static', filename='assets/dummy-image/dummy-photo-umkm2.jpg') }}"
-                class="img-fluid"
-                style="
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  width: 100%;
-                  height: 100%;
-                  border-radius: 10px;
-                  filter: brightness(0.7);
-                "
-                alt="Gambar"
-                id="sampul-profil"
-              />
-            </div>
-            <div
-            class="centered-text"
-              style="
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                text-align: center;
-              "
-            >
-                <p class="title is-1 is-white">
-                  TOKO HIAS KAYU
-                </p>
-                <p class="subtitle is-2 is-white">
-                  Surabaya
-                </p>
-            </div>
-          </div>
-           <!-- UMKM Description Stop -->
-          <!-- UMKM Deskripsi Usaha Start-->
-          <div class="box">
-            <div class="media-content">
-                <div class="content"> <!--user_info.deskripsi_usaha -->
-                    <p>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Odio euismod lacinia at quis. Purus non enim praesent elementum facilisis leo vel fringilla. Integer feugiat scelerisque varius morbi enim nunc faucibus a. Dictumst vestibulum rhoncus est pellentesque. Commodo elit at imperdiet dui accumsan sit amet. Accumsan sit amet nulla facilisi morbi tempus iaculis. Massa enim nec dui nunc mattis enim ut. Nulla facilisi nullam vehicula ipsum. Amet purus gravida quis blandit. Habitasse platea dictumst quisque sagittis purus sit.
-                            <br><br>
-                            Dui id ornare arcu odio ut sem nulla. Dis parturient montes nascetur ridiculus mus. Quis eleifend quam adipiscing vitae proin. Lorem ipsum dolor sit amet consectetur. Fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel. Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi. Id cursus metus aliquam eleifend mi in. Id consectetur purus ut faucibus pulvinar elementum. Pretium fusce id velit ut tortor pretium viverra suspendisse. Laoreet id donec ultrices tincidunt arcu non sodales. Viverra orci sagittis eu volutpat odio facilisis mauris sit. Justo nec ultrices dui sapien eget mi proin sed libero. Maecenas volutpat blandit aliquam etiam erat velit. Ornare arcu odio ut sem nulla pharetra diam. Tortor pretium viverra suspendisse potenti.
-                            non ante </a>. Phasellus lacus ex, semper ac tortor nec, fringilla condimentum orci. Fusce eu rutrum tellus. </p>
-                    </p>
-                    <blockquote> <h4> Sosial Media </h4> <!-- user_info.social_media-->
-                      <ul>
-                          <li> In fermentum leo eu lectus mollis, quis dictum mi aliquet. </li>
-                          <li> Morbi eu nulla lobortis, lobortis est in, fringilla felis. </li>
-                          <li> Aliquam nec felis in sapien venenatis viverra fermentum nec lectus. </li>
-                          <li> Ut non enim metus. </li>
-                        </ul>
-                  </blockquote>
-                </div>
-              </div>
-            </div>
-    <!-- UMKM Deskripsi Usaha Stop--> 
-        </section>
-         <!-- user_info.sampul_give -->
- 
+    <!-- UMKM Sampul Start -->
+    <section id="umkm-page">
+      <!-- UMKM Deskripsi Usaha Stop-->
+    </section>
 
-   
-   
-    
-  
     <!-- Footer Start -->
     <footer class="my-5">
-        <div class="content has-text-centered">
-          <p class="is-blue">2023 Nourish Connection</p>
-        </div>
-      </footer>
-      <!-- Footer Stop -->
-</body>
+      <div class="content has-text-centered">
+        <p class="is-blue">2023 Nourish Connection</p>
+      </div>
+    </footer>
+    <!-- Footer Stop -->
+  </body>
 </html>

@@ -10,6 +10,7 @@ from werkzeug.utils import secure_filename
 from os.path import join, dirname
 from dotenv import load_dotenv
 from functools import wraps
+from bson import ObjectId
 
 
 app=Flask(__name__)
@@ -172,7 +173,8 @@ def umkm_list():
         button_text = 'Masuk'
         button_url = '/login'
         user_info = None
-    return render_template('umkm-list.html', button_text=button_text, button_url=button_url, user_info=user_info)   
+    umkm = db.users.find_one({})
+    return render_template('umkm-list.html', button_text=button_text, button_url=button_url, user_info=user_info, umkm=umkm)   
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -314,31 +316,17 @@ def update_profile():
         })
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
-    
-@app.route('/show_umkm_page',methods = ['GET'])
-def umkm_profile():
-        namaUsaha= list(db.users.find({}, {'_id': False}))
-        return jsonify({
-            'namausaha' : namaUsaha,
-        })
 
-@app.route('/umkm_page',methods = ['GET'])
+@app.route('/get_umkm_page',methods=['GET'])
+def get_umkm_page():
+    namaUsaha = request.cookies.get('namaUsaha')
+    umkm_data = db.users.find_one({'nama_usaha': namaUsaha})
+    return render_template('umkm-page.html', umkm_data=umkm_data)
+
+@app.route('/umkm_page')
 def umkm_page():
-    button_text = 'Profil'
-    button_url = '/profil'
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        user_info = db.users.find_one(
-        {'_id' : False}
-        )
-        if user_info is None:
-            user_info = {}  # Inisialisasi user_info sebagai dictionary kosong jika tidak ditemukan
-        return render_template(
-           'umkm-page.html', button_text=button_text, button_url=button_url, user_info=user_info, 
-        )
-        # return render_template('user.html', button_text=button_text, button_url=button_url, user_info=user_info, status=status)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+    nama_usaha = request.args.get('namaUsaha')
+    return render_template('umkm-page.html', nama_usaha=nama_usaha)
 
 @app.route('/diskusi',methods=['GET'])
 def diskusi():
@@ -362,6 +350,31 @@ def show_preview_umkm_get():
         return jsonify({
             'namausaha' : namaUsaha,
         })
+        
+@app.route('/posting', methods=['POST'])
+def posting():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(
+            token_receive,
+            SECRET_KEY,
+            algorithms=['HS256']
+        )
+        user_info = db.users.find_one({'username' : payload.get('id')})
+        topik_receive = request.form.get('topik_give')
+        date_receive = request.form.get('date_give')
+        doc = {
+            'nama_usaha' : user_info.get('nama_usaha'),
+            'topik' : topik_receive,
+            'date' : date_receive
+        }
+        db.posts.insert_one(doc)
+        return jsonify({
+            'result': 'success',
+            'msg' : 'Posting successful!'
+        })
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
          
 
 if __name__ == '__main__':
