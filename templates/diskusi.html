@@ -66,12 +66,31 @@
             date_give: today,
           },
           success: function (response) {
-            $("#topik-post").removeClass("is-active");
+            $("#modal-post").removeClass("is-active");
             window.location.reload();
           },
         });
       }
+      function time2str(date) {
+        let today = new Date();
+        let time = (today - date) / 1000 / 60;
+        if (time < 60) {
+          return parseInt(time) + " minutes ago";
+        }
+        time = time / 60;
+        if (time < 24) {
+          return parseInt(time) + " hours ago";
+        }
+        time = time / 24;
+        if (time < 7) {
+          return parseInt(time) + " days ago";
+        }
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
 
+        return `${year}.${month}.${day}`;
+      }
       function get_posts(username) {
         if (username === undefined) {
           username = "";
@@ -82,7 +101,8 @@
           url : `/get_posts?username_give=${username}`,
           data : {},
           success : function(response) {
-            if (response["resul"] === "success"){
+            console.log(response)
+            if (response["result"] === "success"){
               let posts = response["posts"];
               for (let i = 0; i < posts.length; i++) {
                 let post = posts[i];
@@ -100,12 +120,9 @@
                 // }
 
                 let html_temp = `
-                  <div class="box" id="${post["_id"]}">
-                    <div
-                      class="card is-bg-blue text-white shadow px-4 px-md-2 px-lg-3 card-span pt-5 border-0 mt-3"
-                    >
+                  <div class="box border rounded-lg" id="${post["_id"]}">
                       <div class="card-body">
-                        <h6 class="heading-color fw-bold is-black">${post["namaUsaha"]}</h6>
+                        <h6 class="heading-color fw-bold is-black">${post["nama_usaha"]}</h6>
                         <small class="is-black">${time_before}</small>
                         <p class="mt-3 mb-md-0 mb-lg-2 is-black">
                           ${post["topik"]}
@@ -115,12 +132,12 @@
                         class="card-footer is-bg-blue border-0 pb-4 d-lg-flex align-items-center justify-content-between pb-5"
                       >
                         <div class="div">
-                          <a href="">Like <i class="bi bi-hand-thumbs-up"></i></a>
-                          <a href="">Komen <i class="bi bi-chat-left-dots"></i></a>
+                          <a href="" class="mr-3"><i class="bi bi-hand-thumbs-up mr-1"></i>100</a>
+                          <a href=""><i class="bi bi-chat-left-dots mr-1"></i>100</a>
                         </div>
                         <button class="btn btn-danger rounded-pill px-4">Hapus</button>
                       </div>
-                    </div>
+                  
                   </div>
                     `;
           $("#post-box").append(html_temp);
@@ -199,11 +216,11 @@
                   id="input-post"
                   class="input is-rounded"
                   placeholder="Tulis topik diskusi kamu"
-                  onclick='$("#topik-post").addClass("is-active")'
+                  onclick='$("#modal-post").addClass("is-active")'
                 />
   
-                <div class="modal" id="topik-post">
-                  <div class="modal-background" onclick="$('#topik-post').removeClass('is-active')">
+                <div class="modal" id="modal-post">
+                  <div class="modal-background" onclick="$('#modal-post').removeClass('is-active')">
                   </div>
                   <div class="modal-content">
                     <div class="box">
@@ -212,9 +229,9 @@
                           <div class="field">
                             <p class="control">
                               <textarea 
-                              id="textarea-post" 
+                              id="topik-post" 
                               class="textarea" 
-                              placeholder="What are you thingking about?"/></textarea>
+                              placeholder="Tulis topik diskusi kamu"/></textarea>
                             </p>
                           </div>
                           <nav class="level is-mobile">
@@ -226,7 +243,7 @@
                                 </a>
                               </div>
                               <div class="level-item">
-                                <a class="button is-sparta is-outlined" onclick="$('#topik-post').removeClass('is-active')">
+                                <a class="button is-sparta is-outlined" onclick="$('#modal-post').removeClass('is-active')">
                                 Cancel
                                 </a>
                               </div>
@@ -236,14 +253,14 @@
                       </article>
                     </div>
                   </div>
-                  <button class="modal-close is-large" aria-label="close" onclick="$('#topik-post').removeClass('is-active')">
+                  <button class="modal-close is-large" aria-label="close" onclick="$('#modal-post').removeClass('is-active')">
                   </button>
                 </div>
                </p>
             </div>
           </div>
         </div>
-        
+
         <div class="col-10" id="post-box">
           
 

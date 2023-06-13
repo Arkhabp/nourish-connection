@@ -364,6 +364,7 @@ def posting():
         topik_receive = request.form.get('topik_give')
         date_receive = request.form.get('date_give')
         doc = {
+            'username' : user_info.get('username'),
             'nama_usaha' : user_info.get('nama_usaha'),
             'topik' : topik_receive,
             'date' : date_receive
@@ -373,6 +374,61 @@ def posting():
             'result': 'success',
             'msg' : 'Posting successful!'
         })
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+    
+@app.route('/get_posts', methods =['GET'])
+def get_posts():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(
+            token_receive,
+            SECRET_KEY,
+            algorithms=['HS256']
+        )
+        username_receive = request.args.get('username_give')
+        if username_receive == '':
+            posts = list(db.posts.find({}).sort('date', -1).limit(20))
+        else:
+            posts = list(db.posts.find({'username':username_receive}).sort('date', -1).limit(20))
+        for post in posts:
+            post['_id'] = str(post['_id'])
+            post['count_heart'] = db.likes.count_documents({
+                'post_id' : post['_id'],
+                'type' : 'heart'
+            })
+
+            post['count_star'] = db.likes.count_documents({
+                'post_id' : post['_id'],
+                'type' : 'star'
+            })
+
+            post['count_thumbsup'] = db.likes.count_documents({
+                'post_id' : post['_id'],
+                'type' : 'thumbsup'
+            })
+
+            post['heart_by_me'] = bool(db.likes.find_one({
+                'post_id' : post['_id'],
+                'type' : 'heart',
+                'username' : payload.get('id')
+            }))
+            post['star_by_me'] = bool(db.likes.find_one({
+                'post_id' : post['_id'],
+                'type' : 'star',
+                'username' : payload.get('id')
+            }))
+            post['thumbsup_by_me'] = bool(db.likes.find_one({
+                'post_id' : post['_id'],
+                'type' : 'thumbsup',
+                'username' : payload.get('id')
+            }))
+        return jsonify({
+            'result': 'success',
+            'msg' : 'Successfuly fetched all posts',
+            'posts' : posts
+        })
+        
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
          
