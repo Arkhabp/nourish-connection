@@ -10,6 +10,7 @@ from werkzeug.utils import secure_filename
 from os.path import join, dirname
 from dotenv import load_dotenv
 from functools import wraps
+from bson import ObjectId
 
 
 app=Flask(__name__)
@@ -172,7 +173,8 @@ def umkm_list():
         button_text = 'Masuk'
         button_url = '/login'
         user_info = None
-    return render_template('umkm-list.html', button_text=button_text, button_url=button_url, user_info=user_info)   
+    umkm = db.users.find_one({})
+    return render_template('umkm-list.html', button_text=button_text, button_url=button_url, user_info=user_info, umkm=umkm)   
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -267,18 +269,113 @@ def user(username):
         return redirect(url_for("home"))
     # return render_template('profil.html')
 
-@app.route('/profil', methods=['GET'])
-def profil():
-    return render_template('user.html') 
+@app.route('/update_profile', methods = ['POST'])
+def update_profile():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(
+            token_receive,
+            SECRET_KEY,
+            algorithms=['HS256']
+        )
+        username = payload.get('id')
 
-@app.route('/umkm_page',methods = ['GET'])
+        sosialMedia_receive = request.form['sosialMedia_give']
+        deskripsi_receive = request.form['deskripsi_give']
+        
+        new_doc = {
+            'sosial_media' : sosialMedia_receive,
+            'deskripsi_usaha' : deskripsi_receive
+        }
+        if 'sampul_give' in request.files:
+            file = request.files['sampul_give']
+            filename = secure_filename(file.filename)
+            extension = filename.split('.')[-1]
+            file_path = f'cover_pics/{username}.{extension}'
+            file.save('./static/' + file_path)
+            new_doc['cover_pic'] = filename
+            new_doc['cover_pic_real'] = file_path
+
+        if 'profile_give' in request.files:
+            file = request.files['profile_give']
+            filename = secure_filename(file.filename)
+            extension = filename.split('.')[-1]
+            file_path = f'profil_pics/{username}.{extension}'
+            file.save('./static/' + file_path)
+            new_doc['profile_pic'] = filename
+            new_doc['profile_pic_real'] = file_path
+
+        db.users.update_one(
+            {'username' : username},
+            {'$set' : new_doc}
+        )
+
+        return jsonify({
+            'result': 'success',
+            'msg' : 'Your profile has been update'
+        })
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+@app.route('/get_umkm_page',methods=['GET'])
+def get_umkm_page():
+    namaUsaha = request.cookies.get('namaUsaha')
+    umkm_data = db.users.find_one({'nama_usaha': namaUsaha})
+    return render_template('umkm-page.html', umkm_data=umkm_data)
+
+@app.route('/umkm_page')
 def umkm_page():
-     return render_template('umkm-page.html')
+    nama_usaha = request.args.get('namaUsaha')
+    return render_template('umkm-page.html', nama_usaha=nama_usaha)
 
 @app.route('/diskusi',methods=['GET'])
 def diskusi():
-   
-    return render_template('diskusi.html')
+    if 'username' in session:
+            button_text = 'Profil'
+            button_url = '/profil'
+            user_info = db.users.find_one({'username': session['username']})
+            if user_info is None:
+                # Jika user_info tidak ditemukan, hapus sesi dan arahkan pengguna ke halaman login
+                session.clear()
+                return redirect(url_for('login'))
+    else:
+        button_text = 'Masuk'
+        button_url = '/login'
+        user_info = None
+    return render_template('diskusi.html', button_text=button_text, button_url=button_url, user_info=user_info)   
+
+@app.route('/show_preview_umkm', methods = ['GET'])
+def show_preview_umkm_get():
+        namaUsaha= list(db.users.find({}, {'_id': False}).sort('username', -1))
+        return jsonify({
+            'namausaha' : namaUsaha,
+        })
+        
+@app.route('/posting', methods=['POST'])
+def posting():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(
+            token_receive,
+            SECRET_KEY,
+            algorithms=['HS256']
+        )
+        user_info = db.users.find_one({'username' : payload.get('id')})
+        topik_receive = request.form.get('topik_give')
+        date_receive = request.form.get('date_give')
+        doc = {
+            'nama_usaha' : user_info.get('nama_usaha'),
+            'topik' : topik_receive,
+            'date' : date_receive
+        }
+        db.posts.insert_one(doc)
+        return jsonify({
+            'result': 'success',
+            'msg' : 'Posting successful!'
+        })
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+         
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD

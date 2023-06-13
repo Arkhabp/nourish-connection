@@ -77,6 +77,66 @@
         -webkit-line-clamp: 5; /* Jumlah baris yang ingin ditampilkan */
       }
     </style>
+
+    <script>
+      $(document).ready(function () {
+        show_preview_umkm();
+      });
+      function show_preview_umkm() {
+        $("#preview-list").empty();
+        $.ajax({
+          type: "GET",
+          url: "/show_preview_umkm",
+          data: {},
+          success: function (response) {
+            let cards = response["namausaha"];
+            console.log(cards);
+            for (let i = 0; i < 4; i++) {
+              let username = cards[i]["nama_usaha"];
+              let namaUsaha = cards[i]["nama_usaha"];
+              let daerah = cards[i]["daerah"];
+              let deskripsi = cards[i]["deskripsi_usaha"];
+              let cover = cards[i]["cover_pic_real"];
+              let temp_html = `
+                      <div class="card mr-5  position-relative" style="width: 18rem; border-radius: 15px;">
+                      <img
+                      src="{{ url_for('static', filename='')}}${cover}"
+                        class="card-img-top"
+                        style="height: 190px;
+                        alt="..."
+                      />
+                    <div class="card-body" style="height: 230px;">
+                      <a href="#">
+                        <h5 class="is-title-card is-blue">${namaUsaha}</h5>
+                        <em class="is-blue is-subtitle">${daerah}</em>
+                      </a>
+                      <p
+                        class="card-text is-truncated is-black mt-1"
+                        style="line-height: 1.3"
+                      >
+                      ${deskripsi}
+                      </p>
+                     <a href="/get_umkm_page" class="position-absolute bottom-0 py-4" onclick="send_data('${namaUsaha}')">
+                        <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
+                      </a>
+                    </div>
+                  </div>
+              `;
+              $("#preview-list").append(temp_html);
+            }
+            // $(".umkm-link").click(function (e) {
+            //   e.preventDefault();
+            //   var id = $(this).data("id");
+            //   getUmkmData(id);
+            // });
+          },
+        });
+      }
+
+      function send_data(namaUsaha) {
+        $.cookie("namaUsaha", namaUsaha); // Simpan namaUsaha yang dipilih dalam cookie
+      }
+    </script>
   </head>
   <body>
     <!-- Navbar Start -->
@@ -107,7 +167,11 @@
           <div class="navbar-start">
             <a class="navbar-item" href="/tentang_nourish"> Tentang Nourish </a>
             <a class="navbar-item" href="/umkm_list"> UMKM </a>
+            {% if 'username' in session %}
             <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
+            {% else %}
+            <a class="navbar-item is-hidden" href="/diskusi"> Diskusi UMKM </a>
+            {% endif %}
           </div>
           <div class="navbar-item">
             {% if 'username' in session %} {% if user_info is defined %}
@@ -196,26 +260,24 @@
     <section class="preview-section mr-2 ml-2">
       <h1 class="is-title is-blue mb-3">Preview UMKM</h1>
 
-      <div class="container-card" id="cards-box">
-        <div class="row row-cols-1 g-0">
+      <div class="container-card ml-0.5">
+        <div class="row g-0" id="preview-list">
           <div class="card mr-5" style="width: 18rem; border-radius: 15px">
             <img
-              src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}"
+              src="{{ url_for('static', filename=user_info.profile_pic_real) }}"
               class="card-img-top"
               alt="..."
             />
             <div class="card-body">
               <a href="#">
-                <h5 class="is-title-card is-blue">Toko Kayu Hias</h5>
-                <em class="is-blue is-subtitle">Banyuwangi</em>
+                <!-- <h5 class="is-title-card is-blue">{{user_info.nama_usaha}}</h5> -->
+                <!-- <em class="is-blue is-subtitle">{{user_info.daerah}}</em> -->
               </a>
               <p
                 class="card-text is-truncated is-black mt-1"
                 style="line-height: 1.3"
               >
-                Toko Kayu Hias adalah sebuah usaha mikro, kecil, dan menengah
-                (UMKM) yang berfokus pada produksi dan penjualan berbagai produk
-                kayu hias.
+                <!-- {{user_info.deskripsi_usaha}} -->
               </p>
               <a href="#">
                 <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
