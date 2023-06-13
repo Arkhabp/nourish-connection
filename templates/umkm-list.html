@@ -61,6 +61,68 @@
       }
     </style>
     <!-- CSS internal Stop-->
+
+    <script>
+      $(document).ready(function () {
+        show_preview_umkm();
+      });
+      function show_preview_umkm() {
+        $("#list-umkm").empty();
+        $.ajax({
+          type: "GET",
+          url: "/show_preview_umkm",
+          data: {},
+          success: function (response) {
+            let cards = response["namausaha"];
+            console.log(cards);
+            for (let i = 0; i < cards.length; i++) { 
+              let namaUsaha = cards[i]["nama_usaha"];
+              let daerah = cards[i]["daerah"];
+              let deskripsi = cards[i]["deskripsi_usaha"];
+              let profile_pic_real = cards[i]["profile_pic_real"];
+              let temp_html = `
+                <article class="media" style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); border-radius: 10px;width: 100%;height: 200px; border-radius: 15px;">
+                  <div class="media-left">
+                    <div
+                    style="
+                      margin-top: 30px;
+                      margin-left:15px;
+                      width: 120px;
+                      height: 120px;
+                      border-width: 10px;
+                      border-color: white;
+                      border-radius: 50%;
+                      overflow: hidden;
+                      display: inline-block;
+                    "
+                    class="gambar"
+                  >
+                    <img
+                      src="{{ url_for('static', filename="") }}${profile_pic_real}"
+                      style="width: 100%; height: 100%; display: block"
+                      alt="profile photo"
+                      id="foto-profil"
+                    />
+                  </div>
+                  </div>
+                  <div class="media-content" style="margin-top: 30px;">
+                    <div class="content">
+                      <p> <strong> ${namaUsaha} </strong>
+                        <br> Kategori : jajanan
+                        <br> ${daerah}
+                        <br> ${deskripsi} 
+                      </p>
+                    </div>
+                  </div>
+                </article>
+                  <br><br>
+              `;
+              $("#list-umkm").append(temp_html);
+            }
+          },
+        });
+      }
+    </script>
   </head>
 
   <body>
@@ -134,59 +196,11 @@
     <!-- Kategori Description Stop -->
 
     <!-- UMKM list Start-->
-    <div class="box">
-        <article class="media">
-          <div class="media-left">
-            <figure class="image is-96x96"> <img class="is-rounded" alt="Profil UMKM" src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}">
-            </figure>
-          </div>
-          <div class="media-content">
-            <div class="content">
-              <p> <strong> Gudang Gerabah </strong>
-                <br> Kategori : jajanan
-                <br> Daerah : Surabaya
-                <br> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-            </div>
-          </div>
-        </article>
-      </div>
+    <div id="list-umkm" class="box">
+      <article class="media">
+      </article>
+    </div>
     <br>
-      <div class="box">
-        <article class="media">
-          <div class="media-left">
-            <figure class="image is-96x96"> <img class="is-rounded" alt="Profil UMKM" src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}">
-            </figure>
-          </div>
-          <div class="media-content">
-            <div class="content">
-              <p> <strong> Toko Kayu Hias </strong>
-                <br> Kategori : jajanan
-                <br> Daerah : Surabaya
-                <br> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-            </div>
-          </div>
-        </article>
-      </div>
-      <br>
-      <div class="box">
-        <article class="media">
-          <div class="media-left">
-            <figure class="image is-96x96"> <img class="is-rounded" alt="Profil UMKM" src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}">
-            </figure>
-          </div>
-          <div class="media-content">
-            <div class="content">
-              <p> <strong> Jajanin Aja </strong>
-                <br> Kategori : jajanan
-                <br> Daerah : Surabaya
-                <br> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-            </div>
-          </div>
-        </article>
-      </div>
     <!-- UMKM list Stop--> 
   
     <!-- Footer Start -->
