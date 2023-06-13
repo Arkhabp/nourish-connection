@@ -7,8 +7,8 @@
   }
   .is-button-blue{
     background-color: #FFFFFF;
-    color: #2B3692;
-    border-color: #2B3692;
+    color: #1A3B70;
+    border-color: #1A3B70;
   }
   .is-button-red{
     background-color: #FF000F;
@@ -19,7 +19,7 @@
     color: #F88125;
   }
   .is-blue{
-    color: #2B3692;
+    color: #1A3B70;
   }
   .is-white{
     color: #FFFFFF;
@@ -31,4 +31,12 @@
     background-color: blue;
     color: white;
   }
-  
+  .is-background-blue{
+    background-color:#1A3B70;
+  }
+  .is-background-orange{
+    background-color: #F88125;
+  }
+ .is-background-white{
+  background-color:#FFFFFF;
+ } 
