@@ -65,14 +65,16 @@
         var namaUsaha = $.cookie("namaUsaha"); // Ambil namaUsaha yang dipilih dari cookie
         $.ajax({
           type: "GET",
-          url: "/show_preview_umkm",
+          url: "/get_umkm_page",
           data: { namaUsaha: namaUsaha }, // Kirim namaUsaha sebagai parameter permintaan
           success: function (response) {
-            let namaUsaha = response["namausaha"][0]["nama_usaha"];
-            let daerah = response["namausaha"][0]["daerah"];
-            let deskripsi = response["namausaha"][0]["deskripsi_usaha"];
-            let cover = response["namausaha"][0]["cover_pic_real"];
-            let sosialMedia = response["namausaha"][0]["sosial_media"];
+            console.log(response);
+            let namaUsaha = response["umkm_data"]["nama_usaha"];
+            console.log(namaUsaha);
+            let daerah = response["umkm_data"]["daerah"];
+            let deskripsi = response["umkm_data"]["deskripsi_usaha"];
+            let cover = response["umkm_data"]["cover_pic_real"];
+            let sosialMedia = response["umkm_data"]["sosial_media"];
 
             let temp_html = `
                     <div id="umkm-desc" class="about-bg columns is-align-items-center">
@@ -142,8 +144,9 @@
         });
       }
 
-      function send_data(namaUsaha) {
-        $.cookie("namaUsaha", namaUsaha); // Simpan namaUsaha yang dipilih dalam cookie
+      function delete_send_data(namaUsaha) {
+        $.removeCookie("namaUsaha");
+        // $.cookie("namaUsaha", namaUsaha); // Simpan namaUsaha yang dipilih dalam cookie
       }
     </script>
     <!-- Script End-->

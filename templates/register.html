@@ -118,6 +118,13 @@
             .text("Masukkan password kamu kembali")
             .removeClass("is-hidden")
             .addClass("is-danger");
+        } else if (password2 != password) {
+          helpPassword2
+            .text("Password doesn't match")
+            .removeClass("is-hidden")
+            .addClass("is-danger");
+          inputPassword2.focus();
+          return;
         }
 
         if (namaUsaha === "") {
@@ -270,7 +277,7 @@
                     <button
                       class="is-white nav-link w-100"
                       type="button"
-                      style="background-color: #1A3B70;"
+                      style="background-color: #1a3b70"
                     >
                       Daftar
                     </button>
@@ -370,7 +377,11 @@
                         Masukkan sosial media (instagram) usaha kamu
                       </p>
                       <div class="form-group mb-3">
-                        <select class="form-select" aria-label="Default select example" id="kategori">
+                        <select
+                          class="form-select"
+                          aria-label="Default select example"
+                          id="kategori"
+                        >
                           <option disabled selected>Kategori</option>
                           <option value="FnB">FnB</option>
                           <option value="Fashion">Fashion</option>
@@ -404,8 +415,8 @@
                         Masukkan deskripsi usaha kamu
                       </p>
                       <button
-                        class="is-button-orange text-white mx-auto d-block px-6 py-3"
-                        style="border: 0px; border-radius: 10px; "
+                        class="is-button-orange text-white mx-auto d-block px-4"
+                        style="border: 0px; border-radius: 10px"
                         type="button"
                         onclick="daftar()"
                       >

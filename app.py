@@ -72,10 +72,21 @@ def go_home():
             user_info = None
 
         return render_template('index.html', button_text=button_text, button_url=button_url, user_info=user_info)   
-    
-   
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' in session:
+            user_info = db.users.find_one({'username': session['username']})
+            if user_info is None or user_info['role'] != 'admin':
+                return redirect(url_for('home'))
+        else:
+            return redirect(url_for('home'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/admin', methods=['GET'])
-# @admin_required
+@admin_required
 def admin():
     users = db.users.find()
     return render_template('admin.html', users=users)
@@ -125,9 +136,11 @@ def register_save():
         "cover_pic": "",
         "cover_pic_real": "cover_pics/cover_placeholder.jpeg",
         "status" : "nonactive",
-        "role" : "umkm"
+        "role" : "umkm",
+        "registration_time": datetime.now()
     }
     db.users.insert_one(doc)
+    db.users.create_index([("registration_time", -1)]) 
     return jsonify({'result':'success'})
 
 @app.route('/sign_up/check_dup', methods=['POST']) 
@@ -320,13 +333,26 @@ def update_profile():
 @app.route('/get_umkm_page',methods=['GET'])
 def get_umkm_page():
     namaUsaha = request.cookies.get('namaUsaha')
-    umkm_data = db.users.find_one({'nama_usaha': namaUsaha})
-    return render_template('umkm-page.html', umkm_data=umkm_data)
+    umkm_data = db.users.find_one({'nama_usaha': namaUsaha}, {'_id' : False})
+    print(umkm_data)
+    return jsonify({'umkm_data':umkm_data})
 
 @app.route('/umkm_page')
 def umkm_page():
+    if 'username' in session:
+            button_text = 'Profil'
+            button_url = '/profil'
+            user_info = db.users.find_one({'username': session['username']})
+            if user_info is None:
+                # Jika user_info tidak ditemukan, hapus sesi dan arahkan pengguna ke halaman login
+                session.clear()
+                return redirect(url_for('login'))
+    else:
+        button_text = 'Masuk'
+        button_url = '/login'
+        user_info = None
     nama_usaha = request.args.get('namaUsaha')
-    return render_template('umkm-page.html', nama_usaha=nama_usaha)
+    return render_template('umkm-page.html', nama_usaha=nama_usaha, button_text=button_text, button_url=button_url, user_info=user_info)
 
 @app.route('/diskusi',methods=['GET'])
 def diskusi():
@@ -346,7 +372,7 @@ def diskusi():
 
 @app.route('/show_preview_umkm', methods = ['GET'])
 def show_preview_umkm_get():
-        namaUsaha= list(db.users.find({}, {'_id': False}).sort('username', -1))
+        namaUsaha= list(db.users.find({}, {'_id': False}).sort('registration_time', -1))
         return jsonify({
             'namausaha' : namaUsaha,
         })
@@ -393,31 +419,11 @@ def get_posts():
             posts = list(db.posts.find({'username':username_receive}).sort('date', -1).limit(20))
         for post in posts:
             post['_id'] = str(post['_id'])
-            post['count_heart'] = db.likes.count_documents({
-                'post_id' : post['_id'],
-                'type' : 'heart'
-            })
-
-            post['count_star'] = db.likes.count_documents({
-                'post_id' : post['_id'],
-                'type' : 'star'
-            })
-
             post['count_thumbsup'] = db.likes.count_documents({
                 'post_id' : post['_id'],
                 'type' : 'thumbsup'
             })
 
-            post['heart_by_me'] = bool(db.likes.find_one({
-                'post_id' : post['_id'],
-                'type' : 'heart',
-                'username' : payload.get('id')
-            }))
-            post['star_by_me'] = bool(db.likes.find_one({
-                'post_id' : post['_id'],
-                'type' : 'star',
-                'username' : payload.get('id')
-            }))
             post['thumbsup_by_me'] = bool(db.likes.find_one({
                 'post_id' : post['_id'],
                 'type' : 'thumbsup',
@@ -431,7 +437,55 @@ def get_posts():
         
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
+
+@app.route('/update_like', methods=['POST'])
+def update_like():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(
+            token_receive,
+            SECRET_KEY,
+            algorithms=['HS256']
+        )
+        user_info = db.users.find_one({'username' : payload.get('id')})
+        post_id_receive = request.form.get('post_id_give')
+        type_receive = request.form.get('type_give')
+        action_receive = request.form.get('action_give')
+        doc = {
+            'post_id' : post_id_receive,
+            'username' : user_info.get('username'),
+            'type' : type_receive
+        }
+        if action_receive == 'like':
+            db.likes.insert_one(doc)
+        else:
+            db.likes.delete_one(doc)
+        
+        count = db.likes.count_documents({
+            'post_id' : post_id_receive,
+            'type' : type_receive,
+            
+            
+        })
+        return jsonify({
+            'result': 'success',
+            'msg' : 'updated!',
+            'count' : count
+        })
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
          
+@app.route('/delete_post', methods=['POST'])
+def delete_post():
+    username = request.form.get('username_give')
+    topik = request.form.get('topik_give')
+    db.posts.delete_one({'username' : username})
+    db.likes.delete_one({'topik' : topik})
+    # db.examples.delete_many({'topik' : topik})
+    return jsonify({
+        'result' : 'success',
+        'msg' : 'the topik was deleted'
+    })
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD

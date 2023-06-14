@@ -75,12 +75,15 @@
           success: function (response) {
             let cards = response["namausaha"];
             console.log(cards);
-            for (let i = 0; i < cards.length; i++) { 
+            for (let i = 0; i < cards.length-1; i++) { 
+              let username = cards[i]["username"];
               let namaUsaha = cards[i]["nama_usaha"];
               let daerah = cards[i]["daerah"];
               let deskripsi = cards[i]["deskripsi_usaha"];
               let profile_pic_real = cards[i]["profile_pic_real"];
+              let cover = cards[i]["cover_pic_real"];
               let temp_html = `
+              
                 <article class="media" style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); border-radius: 10px;width: 100%;height: 200px; border-radius: 15px;">
                   <div class="media-left">
                     <div
@@ -106,21 +109,30 @@
                   </div>
                   </div>
                   <div class="media-content" style="margin-top: 30px;">
+                    <a href="/umkm_page" onclick="send_data('${namaUsaha}')>
                     <div class="content">
-                      <p> <strong> ${namaUsaha} </strong>
+                      <p class="is-black"> <strong> ${namaUsaha} </strong>
                         <br> Kategori : jajanan
                         <br> Daerah : ${daerah}
                         <br> ${deskripsi} 
                       </p>
                     </div>
+                    </a>
                   </div>
                 </article>
                   <br><br>
-              `;
+                `;
               $("#list-umkm").append(temp_html);
             }
           },
         });
+      }
+      function send_data(namaUsaha) {
+        $.cookie("namaUsaha", namaUsaha); // Simpan namaUsaha yang dipilih dalam cookie
+        $.removeCookie("namaUsaha");
+      }
+      function delete_cookie(){
+        $.removeCookie("namaUsaha");
       }
     </script>
   </head>
