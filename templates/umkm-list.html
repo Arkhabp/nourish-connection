@@ -59,6 +59,7 @@
       .about-bg p {
         color: white;
       }
+
     </style>
     <!-- CSS internal Stop-->
 
@@ -79,6 +80,7 @@
               let username = cards[i]["username"];
               let namaUsaha = cards[i]["nama_usaha"];
               let daerah = cards[i]["daerah"];
+              let kategori = cards[i]["kategori"];
               let deskripsi = cards[i]["deskripsi_usaha"];
               let profile_pic_real = cards[i]["profile_pic_real"];
               let cover = cards[i]["cover_pic_real"];
@@ -109,16 +111,21 @@
                   </div>
                   </div>
                   <div class="media-content" style="margin-top: 30px;">
-                    <a href="/umkm_page" onclick="send_data('${namaUsaha}')>
-                    <div class="content">
-                      <p class="is-black"> <strong> ${namaUsaha} </strong>
-                        <br> Kategori : jajanan
-                        <br> Daerah : ${daerah}
-                        <br> ${deskripsi} 
-                      </p>
-                    </div>
+                    <a href="/umkm_page" onclick="send_data('${namaUsaha}')">
+                      <div class="content">
+                        <p class="is-black">
+                          <strong>${namaUsaha}</strong>
+                          <br>Kategori: ${kategori}
+                          <br>Daerah: ${daerah}
+                        </p>
+                        <p class="card-text is-black mt-1" style="line-height: 1.3; max-width: 960px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                          ${deskripsi}
+                        </p>
+                      </div>
                     </a>
                   </div>
+
+
                 </article>
                   <br><br>
                 `;

@@ -73,6 +73,7 @@
             console.log(namaUsaha);
             let daerah = response["umkm_data"]["daerah"];
             let deskripsi = response["umkm_data"]["deskripsi_usaha"];
+            let kategori = response["umkm_data"]["kategori"];
             let cover = response["umkm_data"]["cover_pic_real"];
             let sosialMedia = response["umkm_data"]["sosial_media"];
 
@@ -123,15 +124,15 @@
                 <div class="media-content">
                   <div class="content">
                     <!--user_info.deskripsi_usaha -->
-                    <p class="deskripsi-usaha">${deskripsi}</p>
+                    <p class="is-blue is-subtitle-bold" style="margin-top:-40px">Kategori : ${kategori}</p>
+                    <p class="is-black mb-5" style="white-space: pre-line;">${deskripsi}</p>
                     <blockquote>
-                      <h4>Sosial Media</h4>
+                      <p class="is-blue is-bold-big">Sosial Media (instagram)</p>
                       <!-- user_info.social_media-->
-                      <ul>
-                        <li>
-                          ${sosialMedia}
-                        </li>
-                      </ul>
+                      <div style=" margin-top:-20px; display: flex;">
+                        <i class="fa-brands fa-square-instagram is-blue mr-3" style="font-size: 25px;"></i>   
+                        <p class="is-title-card is-blue" style="font-style: italic; margin-top:-2px">${sosialMedia}</p>
+                      </div>
                     </blockquote>
                   </div>
                 </div>

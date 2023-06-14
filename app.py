@@ -334,7 +334,6 @@ def update_profile():
 def get_umkm_page():
     namaUsaha = request.cookies.get('namaUsaha')
     umkm_data = db.users.find_one({'nama_usaha': namaUsaha}, {'_id' : False})
-    print(umkm_data)
     return jsonify({'umkm_data':umkm_data})
 
 @app.route('/umkm_page')
