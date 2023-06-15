@@ -92,7 +92,7 @@
             let cards = response["namausaha"];
             console.log(cards);
             for (let i = 0; i < 4; i++) {
-              let username = cards[i]["nama_usaha"];
+              let username = cards[i]["username"];
               let namaUsaha = cards[i]["nama_usaha"];
               let daerah = cards[i]["daerah"];
               let deskripsi = cards[i]["deskripsi_usaha"];
@@ -106,7 +106,7 @@
                         alt="..."
                       />
                     <div class="card-body" style="height: 230px;">
-                      <a href="#">
+                      <a href="/umkm_page" onclick="send_data('${namaUsaha}')">
                         <h5 class="is-title-card is-blue">${namaUsaha}</h5>
                         <em class="is-blue is-subtitle">${daerah}</em>
                       </a>
@@ -116,7 +116,7 @@
                       >
                       ${deskripsi}
                       </p>
-                     <a href="/get_umkm_page" class="position-absolute bottom-0 py-4" onclick="send_data('${namaUsaha}')">
+                      <a href="/umkm_page" class="position-absolute bottom-0 py-4" onclick="send_data('${namaUsaha}')">
                         <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
                       </a>
                     </div>
@@ -134,6 +134,7 @@
       }
 
       function send_data(namaUsaha) {
+        $.removeCookie("namaUsaha");
         $.cookie("namaUsaha", namaUsaha); // Simpan namaUsaha yang dipilih dalam cookie
       }
     </script>
@@ -170,7 +171,7 @@
             {% if 'username' in session %}
             <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
             {% else %}
-            <a class="navbar-item is-hidden" href="/diskusi"> Diskusi UMKM </a>
+            <a class="navbar-item is-hidden" href="/"> Diskusi UMKM </a>
             {% endif %}
           </div>
           <div class="navbar-item">

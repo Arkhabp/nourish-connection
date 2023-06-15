@@ -14,7 +14,17 @@
     font-size:15px;
     font-style: italic;
 }
+.is-subtitle-bold{
+    font-weight: bold;
+    font-size:15px;
+    font-style: italic;
+}
 .is-bold{
+    font-weight: 600;
+    color: #2B3692;
+}
+.is-bold-big{
+    font-size: 25px;
     font-weight: 600;
     color: #2B3692;
 }

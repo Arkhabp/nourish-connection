@@ -59,6 +59,15 @@
       .about-bg p {
         color: white;
       }
+
+      .is-truncated {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2; /* Jumlah baris yang ingin ditampilkan */
+        max-width: 950px;
+      }
+
     </style>
     <!-- CSS internal Stop-->
 
@@ -75,12 +84,16 @@
           success: function (response) {
             let cards = response["namausaha"];
             console.log(cards);
-            for (let i = 0; i < cards.length; i++) { 
+            for (let i = 0; i < cards.length-1; i++) { 
+              let username = cards[i]["username"];
               let namaUsaha = cards[i]["nama_usaha"];
               let daerah = cards[i]["daerah"];
+              let kategori = cards[i]["kategori"];
               let deskripsi = cards[i]["deskripsi_usaha"];
               let profile_pic_real = cards[i]["profile_pic_real"];
+              let cover = cards[i]["cover_pic_real"];
               let temp_html = `
+              
                 <article class="media" style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); border-radius: 10px;width: 100%;height: 200px; border-radius: 15px;">
                   <div class="media-left">
                     <div
@@ -106,21 +119,38 @@
                   </div>
                   </div>
                   <div class="media-content" style="margin-top: 30px;">
-                    <div class="content">
-                      <p> <strong> ${namaUsaha} </strong>
-                        <br> Kategori : jajanan
-                        <br> Daerah : ${daerah}
-                        <br> ${deskripsi} 
-                      </p>
-                    </div>
+                    <a href="/umkm_page" onclick="send_data('${namaUsaha}')">
+                      <div class="content">
+                        <p class="is-black">
+                          <strong class="is-title-card">${namaUsaha}</strong>
+                          <br><span style="opacity: 0.7;" class="is-subtitle">Kategori: ${kategori}</span>
+                          <br><span style="opacity: 0.7;" class="is-subtitle">Daerah: ${daerah}</span>
+                        </p>
+                        <p
+                          class="card-text is-truncated is-black mt-1"
+                          style="line-height: 1.3"
+                        >
+                        ${deskripsi}
+                        </p>
+                      </div>
+                    </a>
                   </div>
+
+
                 </article>
                   <br><br>
-              `;
+                `;
               $("#list-umkm").append(temp_html);
             }
           },
         });
+      }
+      function send_data(namaUsaha) {
+        $.cookie("namaUsaha", namaUsaha); // Simpan namaUsaha yang dipilih dalam cookie
+        $.removeCookie("namaUsaha");
+      }
+      function delete_cookie(){
+        $.removeCookie("namaUsaha");
       }
     </script>
   </head>
