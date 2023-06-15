@@ -17,9 +17,9 @@ app=Flask(__name__)
 dotenv_path = join(dirname(__file__),'.env')
 load_dotenv(dotenv_path)
 
-SECRET_KEY = 'NOURISH'
-TOKEN_KEY='mytoken'
-app.secret_key = 'NOURISH'
+SECRET_KEY = os.environ.get("SECRET_KEY")
+TOKEN_KEY = os.environ.get("TOKEN_KEY")
+app.secret_key = os.environ.get("app.secret_key")
 MONGODB_URI = os.environ.get("MONGODB_URI")
 DB_NAME = os.environ.get("DB_NAME")
 
@@ -484,6 +484,18 @@ def delete_post():
     return jsonify({
         'result' : 'success',
         'msg' : 'the topik was deleted'
+    })
+
+@app.route('/save_comment', methods=['POST'])
+def save_comment():
+    comment = request.form.get('comment')
+    doc = {
+        'comment' : comment
+    }
+    db.comment.insert_one(doc)
+    return jsonify({
+        'result' : 'success',
+        'msg' : f'Your comment was saved!'
     })
 
 if __name__ == '__main__':

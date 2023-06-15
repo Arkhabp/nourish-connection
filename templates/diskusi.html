@@ -114,7 +114,26 @@
         return count;
       }
 
+      function toggle_comment(postId){
+        $("#comment-section-" + postId).toggleClass("is-hidden");
+      }
+      function add_comment(){
+        let new_comment = $('#new-comment').val();
+        $.ajax({
+          type : 'POST',
+          url : '/save_comment',
+          data : {
+            comment : new_comment
+          },
+          success : function (response){
+            if (response.result === 'success'){
+            alert(response.msg)
+            window.location.reload();
 
+          }
+          }
+        })
+      }
       function get_posts(username) {
         if (username === undefined) {
           username = "";
@@ -167,9 +186,9 @@
                           <a 
                               class="level-item is-blue"
                               aria-label="comment"
-                              onclick="">
+                              onclick="toggle_comment('${post["_id"]}')">
                               <span class="icon is-small">
-                              <i class="fa-regular fa-comment" area-hidden="true"></i>
+                              <i class="fa-regular fa-comment"></i>
                               </span>&nbsp;<span class="comment-num">100
                               </span>
                           </a>
@@ -180,6 +199,21 @@
                           <button class="btn btn-danger rounded-pill px-4 is-hidden">Hapus</button>
                         `}
                       </div>
+                      <div id="comment-section-${post["_id"]}" class="container mb-5 comment-section is-hidden">
+                          <h3 style="text-align: center; margin-bottom: 1rem;">Tuliskan Komentar kamu disini</h3>
+                          <ul id="comment-list">
+                            <li>
+                              <div>
+                                <h1>Username</h1>
+                                <p>komentar</p>
+                              </div>
+                            </li>
+                          </ul>
+                          <div class="d-flex justify-content-between" style="margin-left:20px;">
+                            <input id="new-comment" class="form-control form-control-sm" style="margin-right: 20px;">
+                            <button class="btn btn-outline-secondary btn-sm" onclick="add_comment()">add</button>
+                          </div>
+                        </div>
                   </div>
                   `;
           $("#post-box").append(html_temp);

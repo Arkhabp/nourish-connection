@@ -60,6 +60,14 @@
         color: white;
       }
 
+      .is-truncated {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2; /* Jumlah baris yang ingin ditampilkan */
+        max-width: 950px;
+      }
+
     </style>
     <!-- CSS internal Stop-->
 
@@ -114,12 +122,15 @@
                     <a href="/umkm_page" onclick="send_data('${namaUsaha}')">
                       <div class="content">
                         <p class="is-black">
-                          <strong>${namaUsaha}</strong>
-                          <br>Kategori: ${kategori}
-                          <br>Daerah: ${daerah}
+                          <strong class="is-title-card">${namaUsaha}</strong>
+                          <br><span style="opacity: 0.7;" class="is-subtitle">Kategori: ${kategori}</span>
+                          <br><span style="opacity: 0.7;" class="is-subtitle">Daerah: ${daerah}</span>
                         </p>
-                        <p class="card-text is-black mt-1" style="line-height: 1.3; max-width: 960px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-                          ${deskripsi}
+                        <p
+                          class="card-text is-truncated is-black mt-1"
+                          style="line-height: 1.3"
+                        >
+                        ${deskripsi}
                         </p>
                       </div>
                     </a>
