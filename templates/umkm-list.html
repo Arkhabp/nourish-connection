@@ -146,8 +146,8 @@
         });
       }
       function send_data(namaUsaha) {
-        $.cookie("namaUsaha", namaUsaha); // Simpan namaUsaha yang dipilih dalam cookie
         $.removeCookie("namaUsaha");
+        $.cookie("namaUsaha", namaUsaha); // Simpan namaUsaha yang dipilih dalam cookie
       }
       function delete_cookie(){
         $.removeCookie("namaUsaha");
