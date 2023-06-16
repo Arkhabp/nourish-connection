@@ -61,7 +61,12 @@
       })
       function post() {
         let topik = $("#topik-post").val();
+        if (topik === ""){
+          alert('Tuliskan diskusi kamu!')
+          return;
+        }
         let today = new Date().toISOString();
+        console.log(today)
         $.ajax({
           type: "POST",
           url: "/posting",
@@ -118,27 +123,76 @@
         $("#comment-section-" + postId).toggleClass("is-hidden");
       }
 
-      function add_comment(){
-        let new_comment = $('#new-comment').val();
-        if (new_comment === '' ){
+      function add_comment(postId, usernameComment, profilePhoto){
+        usernameComment = '{{ user_info.username }}'
+        profilePhoto = '{{user_info.profile_pic_real}}'
+        console.log(usernameComment)
+        console.log(profilePhoto)
+        let new_comment = $('#new-comment-' + postId).val();
+        if (new_comment === "" ){
               alert("Masukkan komentar anda!")
               return;
             }
+        let today = new Date().toISOString();
+        console.log(today)
         $.ajax({
           type : 'POST',
           url : '/save_comment',
           data : {
-            comment : new_comment
+            post_id_give: postId,
+            username_give : usernameComment,
+            profilePhoto_give : profilePhoto,
+            comment : new_comment,
+            date_give: today,
           },
           success : function (response){
             if (response.result === 'success'){
             alert(response.msg)
+            let new_comment = response.new_comment;
+            let commentList = $("#comment-list-" + postId);
             window.location.reload();
 
           }
           }
         })
       }
+
+      function get_comments(postId) {
+        let commentList = $("#comment-list-" + postId);
+        let commentNum = $("#comment-num-" + postId);
+        commentList.empty(); // Kosongkan daftar komentar sebelum mengisi dengan komentar baru
+
+        $.ajax({
+          type: 'GET',
+          url: '/get_comments',
+          data: {
+            postId: postId
+          },
+          success: function(response) {
+            if (response.result === 'success') {
+              let comments = response.comments;
+              console.log(comments)
+              commentNum.text(comments.length);
+              for (let i = 0; i < comments.length; i++) {
+                let comment = comments[i];
+                let time_post = new Date(comment["date"]);
+                let time_before = time2str(time_post);
+                let commentHtml = `
+                  <li>
+                    <div style ="margin-bottom: 10px; margin-left: 15px; border-bottom: 1px solid #ccc; padding-bottom:6px">
+                      <p class="is-title-card is-black">${comment.username}</p>
+                      <p class="is-black is-subtitle mb-1" style="margin-bottom: -10px;">${time_before}</p>
+                      <p class="is-black" style="white-space: pre-line;">${comment.comment}</p>
+                    </div>
+                  </li>
+                `;
+                commentList.append(commentHtml);
+              }
+            }
+          }
+        });
+      }
+
 
       function get_posts(username) {
         if (username === undefined) {
@@ -157,25 +211,47 @@
               for (let i = 0; i < posts.length; i++) {
                 let post = posts[i];
                 let time_post = new Date(post["date"]);
+                console.log(time_post)
                 let time_before = time2str(time_post);
                 let class_thumbsup = post["thumbsup_by_me"]
                   ? "fa-thumbs-up"
                   : "fa-thumbs-o-up";
-                let class_comment = post["comment_by_me"]
-                  ? "fa-comment"
-                  : "fa-thumbs-o-up";
-              
+
                 let html_temp = `
-                  <div class="box border rounded-lg" id="${post["_id"]}">
+                  <div class="box shadow" id="${post["_id"]}" style="border-radius:25px">
                       <div class="card-body">
-                        <h6 class="heading-color fw-bold is-black">${post["nama_usaha"]}</h6>
-                        <small class="is-black">${time_before}</small>
-                        <p class="mt-3 mb-md-0 mb-lg-2 is-black">
+                        <div style="display: flex; align-items: center; margin-left:-5px">
+                          <div id="photo-profil"
+                            style="
+                              width: 48px;
+                              height: 48px;
+                              border-width: 10px;
+                              border-color: white;
+                              border-radius: 50%;
+                              overflow: hidden;
+                              display: inline-block;
+                            "
+                            class="gambar"
+                          >
+                            <img
+                              src="{{ url_for('static', filename="") }}${post["profile_pic_real"]}"
+                              style="width: 100%; height: 100%; display: block"
+                              alt="profile photo"
+                              id="foto-profil"
+                            />
+                          </div>
+                          <div id="username" style="margin-left:12px; margin-top:-8px">
+                          <h6 class="heading-color fw-bold is-black is-title-card">${post["nama_usaha"]}</h6>
+                          <p class="is-black is-subtitle" style="margin-bottom: -10px;">${time_before}</p>
+                          </div>
+                        </div>
+
+                        <p class="is-black" style="white-space: pre-line;">
                           ${post["topik"]}
                         </p>
                       </div>
                       <div
-                        class="card-footer is-bg-blue border-0 pb-4 d-lg-flex align-items-center justify-content-between pb-5"
+                        class="card-footer is-bg-blue border-0 pb-0 d-lg-flex align-items-center justify-content-between mb-5"
                       >
                       
                         <div class="level-left">
@@ -195,34 +271,30 @@
                               onclick="toggle_comment('${post["_id"]}')">
                               <span class="icon is-small">
                               <i class="fa-regular fa-comment"></i>
-                              </span>&nbsp;<span class="comment-num">100
-                              </span>
+                              </span>&nbsp;
+                              <span class="comment-num" id="comment-num-${post["_id"]}">0</span> 
                           </a>
                         </div>
                         ${post["username"] === username_post ? `
-                          <button class="btn btn-danger rounded-pill px-4" onclick="delete_post()">Hapus</button>
+                          <button class="btn btn-danger rounded-pill px-4" onclick="delete_post('${post["_id"]}')">Hapus</button>
                         ` : `
                           <button class="btn btn-danger rounded-pill px-4 is-hidden">Hapus</button>
                         `}
                       </div>
-                      <div id="comment-section-${post["_id"]}" class="container mb-5 comment-section is-hidden">
-                          <h3 style="text-align: center; margin-bottom: 1rem;">Tuliskan Komentar kamu disini</h3>
-                          <ul id="comment-list">
-                            <li>
-                              <div>
-                                <h1>Username</h1>
-                                <p>komentar</p>
-                              </div>
-                            </li>
+                      <div id="comment-section-${post["_id"]}" class="mb-5 is-hidden shadow p-5">
+                          <h1 style="margin-bottom: 1rem; margin-left:15px" class="is-blue">Tuliskan Komentar kamu disini</h1>
+                          <ul id="comment-list-${post["_id"]}">
+                            
                           </ul>
-                          <div class="d-flex justify-content-between" style="margin-left:20px;">
-                            <input id="new-comment" class="form-control form-control-sm" style="margin-right: 20px;">
-                            <button class="btn btn-outline-secondary btn-sm" onclick="add_comment()">add</button>
+                          <div class="d-flex justify-content-between">
+                            <input id="new-comment-${post["_id"]}" class="form-control form-control-sm" style="margin-right: 20px;">
+                            <button class="is-button-blue rounded is-blue" onclick="add_comment('${post["_id"]}', '${post["usernameComment"]}', '${post["profilePhoto"]}' )">Kirim</button>
                           </div>
-                        </div>
+                      </div>
                   </div>
                   `;
           $("#post-box").append(html_temp);
+          get_comments(post["_id"]);
         }
             }
           }
@@ -264,15 +336,16 @@
         }
       }
 
-      function delete_post(){
+      function delete_post(postId){
         let username_post = '{{ user_info.username }}'
-        let topik_post = post["topik"]
+        let topik_post = postId
+        console.log(username_post)
         $.ajax({
           type : 'POST',
           url : '/delete_post',
           data : {
             username_give : username_post,
-            topik_give : topik_post
+            postId_give : topik_post
           },
           success : function(response){
             if (response.result === 'success'){

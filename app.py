@@ -392,7 +392,8 @@ def posting():
             'username' : user_info.get('username'),
             'nama_usaha' : user_info.get('nama_usaha'),
             'topik' : topik_receive,
-            'date' : date_receive
+            'date' : date_receive,
+            'profile_pic_real' : user_info.get('profile_pic_real')
         }
         db.posts.insert_one(doc)
         return jsonify({
@@ -405,6 +406,7 @@ def posting():
 @app.route('/get_posts', methods =['GET'])
 def get_posts():
     token_receive = request.cookies.get(TOKEN_KEY)
+    comments = db.comment.find({})
     try:
         payload = jwt.decode(
             token_receive,
@@ -477,9 +479,14 @@ def update_like():
 @app.route('/delete_post', methods=['POST'])
 def delete_post():
     username = request.form.get('username_give')
-    topik = request.form.get('topik_give')
+    postId = request.form.get('postId_give')
+    print(postId)
+    post = db.posts.find_one({'_id': ObjectId(postId)})
+
+    
     db.posts.delete_one({'username' : username})
-    db.likes.delete_one({'topik' : topik})
+    db.likes.delete_many({'post_id': postId})
+    db.comment.delete_many({'comment_id': postId})
     # db.examples.delete_many({'topik' : topik})
     return jsonify({
         'result' : 'success',
@@ -488,15 +495,53 @@ def delete_post():
 
 @app.route('/save_comment', methods=['POST'])
 def save_comment():
-    comment = request.form.get('comment')
-    doc = {
-        'comment' : comment
-    }
-    db.comment.insert_one(doc)
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(
+                token_receive,
+                SECRET_KEY,
+                algorithms=['HS256']
+            )
+        comment = request.form.get('comment')
+        comment_id = request.form.get('post_id_give')
+        username = request.args.get('username_give')
+        date_receive = request.form.get('date_give')
+        user_info = db.users.find_one({'username' : payload.get('id')})
+        doc = {
+            'comment_id' : comment_id,
+            'username' : user_info.get('username'),
+            'comment' : comment,
+            'date' : date_receive
+        }
+        db.comment.insert_one(doc)
+        return jsonify({
+            'result' : 'success',
+            'msg' : f'Komentar kamu berhasil di simpan!',
+            'new_comment': {
+            'username': user_info.get('username'),
+            'comment': comment,
+            }
+        })
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+    
+
+@app.route('/get_comments', methods=['GET'])
+def get_comments():
+    postId = request.args.get('postId')
+    comment_data = db.comment.find({'comment_id': postId})
+    comments = []
+    for comment in comment_data:
+        comments.append({
+            'username': comment.get('username'),
+            'comment': comment.get('comment'),
+            'date' : comment.get('date')
+        })
     return jsonify({
-        'result' : 'success',
-        'msg' : f'Your comment was saved!'
+        'result': 'success',
+        'comments': comments
     })
+
 
 if __name__ == '__main__':
     #DEBUG is SET to TRUE. CHANGE FOR PROD
