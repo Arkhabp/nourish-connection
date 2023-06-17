@@ -156,7 +156,6 @@
           }
         })
       }
-
       function get_comments(postId) {
         let commentList = $("#comment-list-" + postId);
         let commentNum = $("#comment-num-" + postId);
@@ -179,10 +178,36 @@
                 let time_before = time2str(time_post);
                 let commentHtml = `
                   <li>
-                    <div style ="margin-bottom: 10px; margin-left: 15px; border-bottom: 1px solid #ccc; padding-bottom:6px">
-                      <p class="is-title-card is-black">${comment.username}</p>
-                      <p class="is-black is-subtitle mb-1" style="margin-bottom: -10px;">${time_before}</p>
-                      <p class="is-black" style="white-space: pre-line;">${comment.comment}</p>
+                    <div style="display: flex; align-items: center; margin-left:-5px; margin-bottom: 10px; margin-left: 15px; border-bottom: 1px solid #ccc; padding-bottom:6px">
+                      <div id="photo-profil"
+                            style="
+                              margin-right:12px;
+                              margin-top : -60px;
+                              width: 48px;
+                              height: 48px;
+                              border-width: 10px;
+                              border-color: white;
+                              border-radius: 50%;
+                              overflow: hidden;
+                              display: inline-block;
+                            "
+                            class="gambar"
+                          >
+                            <img
+                              src="{{ url_for('static', filename="") }}${comment.profile_pic_real}"
+                              style="width: 100%; height: 100%; display: block"
+                              alt="profile photo"
+                              id="foto-profil"
+                            />
+                        </div>
+                          
+                      <a href="/umkm_page" onclick="send_data('${comment.username}')">
+                        <div>
+                          <p class="is-title-card is-black">${comment.username}</p>
+                          <p class="is-black is-subtitle mb-1" style="margin-top: -4px;">${time_before}</p>
+                          <p class="is-black" style="white-space: pre-line; margin-top:30px">${comment.comment}</p>
+                        </div>
+                      </a>
                     </div>
                   </li>
                 `;
@@ -240,13 +265,15 @@
                               id="foto-profil"
                             />
                           </div>
-                          <div id="username" style="margin-left:12px; margin-top:-8px">
-                          <h6 class="heading-color fw-bold is-black is-title-card">${post["nama_usaha"]}</h6>
-                          <p class="is-black is-subtitle" style="margin-bottom: -10px;">${time_before}</p>
-                          </div>
+                          <a href="/umkm_page" onclick="send_data('${post["nama_usaha"]}')">
+                            <div id="username" style="margin-left:12px; margin-top:-8px">
+                              <h6 class="heading-color fw-bold is-black is-title-card">${post["nama_usaha"]}</h6>
+                              <p class="is-black is-subtitle" style="margin-bottom: -10px;">${time_before}</p>
+                            </div>
+                          </a>
                         </div>
 
-                        <p class="is-black" style="white-space: pre-line;">
+                        <p class="is-black" style="white-space: pre-line; margin-left:57px">
                           ${post["topik"]}
                         </p>
                       </div>
@@ -282,7 +309,7 @@
                         `}
                       </div>
                       <div id="comment-section-${post["_id"]}" class="mb-5 is-hidden shadow p-5">
-                          <h1 style="margin-bottom: 1rem; margin-left:15px" class="is-blue">Tuliskan Komentar kamu disini</h1>
+                          <h1 style="margin-bottom: 1rem; margin-left:15px;" class="is-title is-blue">Tuliskan Komentar kamu disini</h1>
                           <ul id="comment-list-${post["_id"]}">
                             
                           </ul>
@@ -356,6 +383,11 @@
             }
           }
         })
+      }
+
+      function send_data(namaUsaha) {
+        $.removeCookie("namaUsaha");
+        $.cookie("namaUsaha", namaUsaha); // Simpan namaUsaha yang dipilih dalam cookie
       }
     </script>
   </head>

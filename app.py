@@ -506,12 +506,14 @@ def save_comment():
         comment_id = request.form.get('post_id_give')
         username = request.args.get('username_give')
         date_receive = request.form.get('date_give')
+        profilePhoto_receive = request.form.get('profilePhoto_give')
         user_info = db.users.find_one({'username' : payload.get('id')})
         doc = {
             'comment_id' : comment_id,
             'username' : user_info.get('username'),
             'comment' : comment,
-            'date' : date_receive
+            'date' : date_receive,
+            'profile_pic_real' : profilePhoto_receive
         }
         db.comment.insert_one(doc)
         return jsonify({
@@ -535,7 +537,8 @@ def get_comments():
         comments.append({
             'username': comment.get('username'),
             'comment': comment.get('comment'),
-            'date' : comment.get('date')
+            'date' : comment.get('date'),
+            'profile_pic_real' : comment.get('profile_pic_real')
         })
     return jsonify({
         'result': 'success',
