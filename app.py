@@ -1,5 +1,5 @@
 from flask import Flask,redirect,url_for,render_template,request, url_for, jsonify, session
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING
 from jwt import encode as jwt_encode
 import jwt
 from datetime import datetime, timedelta
@@ -42,19 +42,6 @@ def home():
             user_info = None
 
         return render_template('index.html', button_text=button_text, button_url=button_url, user_info=user_info) 
-    #code sebelumnya 
-        # if request.method == 'POST':
-        #     # Handle POST Request here
-        #     return render_template('home.html')
-        # if 'username' in session:
-        #     button_text = 'Profil'
-        #     button_url = '/profil'
-        # else:
-        #     button_text = 'Masuk'
-        #     button_url = '/login'
-        # print(session)
-        # return render_template('index.html', button_text=button_text, button_url=button_url)
-# baru ditambah
 @app.route('/home')
 def go_home():
     # Logika dan tampilan halaman home
@@ -371,7 +358,7 @@ def diskusi():
 
 @app.route('/show_preview_umkm', methods = ['GET'])
 def show_preview_umkm_get():
-        namaUsaha= list(db.users.find({}, {'_id': False}).sort('registration_time', -1))
+        namaUsaha = list(db.users.find({'status': 'active'}, {'_id': False}).sort('registration_time', -1))
         return jsonify({
             'namausaha' : namaUsaha,
         })
@@ -531,7 +518,7 @@ def save_comment():
 @app.route('/get_comments', methods=['GET'])
 def get_comments():
     postId = request.args.get('postId')
-    comment_data = db.comment.find({'comment_id': postId})
+    comment_data = db.comment.find({'comment_id': postId}).sort('date', DESCENDING)
     comments = []
     for comment in comment_data:
         comments.append({

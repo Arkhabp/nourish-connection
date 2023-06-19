@@ -92,6 +92,7 @@
               let deskripsi = cards[i]["deskripsi_usaha"];
               let profile_pic_real = cards[i]["profile_pic_real"];
               let cover = cards[i]["cover_pic_real"];
+              let status = cards[i]["status"];
               let temp_html = `
               
                 <article class="media" style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); border-radius: 10px;width: 100%;height: 200px; border-radius: 15px;">
@@ -123,8 +124,8 @@
                       <div class="content">
                         <p class="is-black">
                           <strong class="is-title-card">${namaUsaha}</strong>
-                          <br><span style="opacity: 0.7;" class="is-subtitle">Kategori: ${kategori}</span>
-                          <br><span style="opacity: 0.7;" class="is-subtitle">Daerah: ${daerah}</span>
+                          <br><span style="opacity: 0.7;" class="is-subtitle">Kategori : ${kategori}</span>
+                          <br><span style="opacity: 0.7;" class="is-subtitle">Daerah : ${daerah}</span>
                         </p>
                         <p
                           class="card-text is-truncated is-black mt-1"

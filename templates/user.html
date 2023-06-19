@@ -50,6 +50,10 @@
     />
 
     <script>
+      $(document).ready(function () {
+        get_posts("{{user_info.username}}");
+      });
+
       function sign_out() {
         $.removeCookie("mytoken", { path: "/" });
         alert("Signed out!");
@@ -144,7 +148,7 @@
         <div class="is-flex-grow-1" style="position: relative">
           <div
             class="image-container"
-            style="position: relative; height: 0; padding-bottom: 22%"
+            style="position: relative; padding-bottom: 32.25%"
           >
             <img
               src="{{ url_for('static', filename=user_info.cover_pic_real) }}"
