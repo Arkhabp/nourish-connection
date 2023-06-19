@@ -157,13 +157,13 @@
     <!-- Navbar Start -->
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="/">
+        <a class="navbar-items" href="/">
           <img
             src="{{url_for('static', filename='assets/logo/logo-text-blue.png')}}"
             width="100"
           />
         </a>
-
+  
         <a
           role="button"
           class="navbar-burger"
@@ -176,7 +176,7 @@
           <span aria-hidden="true"></span>
         </a>
       </div>
-
+  
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-start">
@@ -188,7 +188,7 @@
             <a class="navbar-item is-hidden" href="/diskusi"> Diskusi UMKM </a>
             {% endif %}
           </div>
-          <div class="navbar-item">
+          <div class="navbar-items mr-3 ml-2 mt-1">
             {% if 'username' in session %} {% if user_info is defined %}
             <div class="buttons">
               <a

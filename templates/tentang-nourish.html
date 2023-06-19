@@ -69,7 +69,7 @@
     <!-- Navbar Start -->
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="/">
+        <a class="navbar-items" href="/">
           <img
             src="{{url_for('static', filename='assets/logo/logo-text-blue.png')}}"
             width="100"
@@ -92,15 +92,17 @@
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-start">
-            <a class="navbar-item" href="/tentang_nourish"> Tentang Nourish </a>
+            <a class="navbar-item active" href="/tentang_nourish">
+              Tentang Nourish
+            </a>
             <a class="navbar-item" href="/umkm_list"> UMKM </a>
             {% if 'username' in session %}
             <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
             {% else %}
-            <a class="navbar-item is-hidden" href="/diskusi"> Diskusi UMKM </a>
+            <a class="navbar-item active is-hidden" href="/"> Diskusi UMKM </a>
             {% endif %}
           </div>
-          <div class="navbar-item">
+          <div class="navbar-items mr-3 ml-2 mt-1">
             {% if 'username' in session %} {% if user_info is defined %}
             <div class="buttons">
               <a
