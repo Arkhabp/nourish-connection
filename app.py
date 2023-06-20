@@ -11,6 +11,7 @@ from os.path import join, dirname
 from dotenv import load_dotenv
 from functools import wraps
 from bson import ObjectId
+import urllib.parse
 
 
 app=Flask(__name__)
@@ -319,7 +320,7 @@ def update_profile():
 
 @app.route('/get_umkm_page',methods=['GET'])
 def get_umkm_page():
-    namaUsaha = request.cookies.get('namaUsaha')
+    namaUsaha = urllib.parse.unquote(request.args.get('namaUsaha'))
     umkm_data = db.users.find_one({'nama_usaha': namaUsaha}, {'_id' : False})
     return jsonify({'umkm_data':umkm_data})
 

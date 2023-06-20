@@ -177,39 +177,38 @@
                 let time_post = new Date(comment["date"]);
                 let time_before = time2str(time_post);
                 let commentHtml = `
-                  <li>
-                    <div style="display: flex; align-items: center; margin-left:-5px; margin-bottom: 10px; margin-left: 15px; border-bottom: 1px solid #ccc; padding-bottom:6px">
-                      <div id="photo-profil"
-                            style="
-                              margin-right:12px;
-                              margin-top : -60px;
-                              width: 48px;
-                              height: 48px;
-                              border-width: 10px;
-                              border-color: white;
-                              border-radius: 50%;
-                              overflow: hidden;
-                              display: inline-block;
-                            "
-                            class="gambar"
-                          >
-                            <img
-                              src="{{ url_for('static', filename="") }}${comment.profile_pic_real}"
-                              style="width: 100%; height: 100%; display: block"
-                              alt="profile photo"
-                              id="foto-profil"
-                            />
-                        </div>
-                          
-                      <a href="/umkm_page" onclick="send_data('${comment.username}')">
-                        <div>
-                          <p class="is-title-card is-black">${comment.username}</p>
-                          <p class="is-black is-subtitle mb-1" style="margin-top: -4px;">${time_before}</p>
-                          <p class="is-black" style="white-space: pre-line; margin-top:30px">${comment.comment}</p>
-                        </div>
-                      </a>
+                <li style="border-bottom: 1px solid #ccc; margin-bottom: 10px;">
+                  <div style="display: flex; align-items: center; margin-left: -5px; margin-left: 15px;">
+                    <div id="photo-profil"
+                      style="
+                        margin-right: 12px;
+                        margin-top: 0px;
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        display: inline-block;
+                      "
+                      class="gambar"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='') }}${comment.profile_pic_real}"
+                        style="width: 100%; height: 100%; display: block"
+                        alt="profile photo"
+                        id="foto-profil"
+                      />
                     </div>
-                  </li>
+
+                    <a href="/umkm_page" onclick="send_data('${comment.username}')">
+                      <div>
+                        <p class="is-title-card is-black">${comment.username}</p>
+                        <p class="is-black is-subtitle mb-1" style="margin-top: -4px;">${time_before}</p>
+                      </div>
+                    </a>
+                  </div>
+                  <p class="is-black comment-text" style="margin-top: 10px; white-space: pre-line;margin-left:75px; margin-bottom:10px">${comment.comment}</p>
+                </li>
+
                 `;
                 commentList.append(commentHtml);
               }
@@ -266,7 +265,7 @@
                           <a href="/umkm_page" onclick="send_data('${post["nama_usaha"]}')">
                             <div id="username" style="margin-left:12px; margin-top:-8px">
                               <h6 class="heading-color fw-bold is-black is-title-card">${post["nama_usaha"]}</h6>
-                              <p class="is-black is-subtitle" style="margin-bottom: -10px;">${time_before}</p>
+                              <p class="is-black is-subtitle" style="margin-bottom: -15px;">${time_before}</p>
                             </div>
                           </a>
                         </div>

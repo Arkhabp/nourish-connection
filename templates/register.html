@@ -216,7 +216,7 @@
       }
 
       function is_nickname(asValue) {
-        var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+        var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,15}$/;
         return regExp.test(asValue);
       }
       function is_password(asValue) {
@@ -240,7 +240,7 @@
         if (!is_nickname(username)) {
           helpId
             .text(
-              "Untuk username kamu, masukkan 2-10 karakter, nomor, atau menggunakan special characters (._-)"
+              "Untuk username kamu, masukkan 2-15 karakter, nomor, atau menggunakan special characters (._-)"
             )
             .removeClass("is-safe")
             .addClass("is-danger");

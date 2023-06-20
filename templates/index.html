@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link
+      rel="shortcut icon"
+      href="{{url_for('static', filename='assets/logo/logo-blue.ico')}}"
+      type="image/x-icon"
+    />
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -75,6 +80,7 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         -webkit-line-clamp: 5; /* Jumlah baris yang ingin ditampilkan */
+        max-width: 950px; /* Jumlah baris yang ingin ditampilkan */
       }
     </style>
 
@@ -91,36 +97,36 @@
           success: function (response) {
             let cards = response["namausaha"];
             console.log(cards);
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 6; i++) {
               let username = cards[i]["username"];
               let namaUsaha = cards[i]["nama_usaha"];
               let daerah = cards[i]["daerah"];
               let deskripsi = cards[i]["deskripsi_usaha"];
               let cover = cards[i]["cover_pic_real"];
               let temp_html = `
-                      <div class="card mr-5  position-relative" style="width: 18rem; border-radius: 15px;">
+                    <div class="card mr-5" style="width: 18rem; border-radius: 15px;flex-shrink: 0;">
                       <img
                       src="{{ url_for('static', filename='')}}${cover}"
                         class="card-img-top"
-                        style="height: 190px;
+                        style="height: 190px;"
                         alt="..."
                       />
-                    <div class="card-body" style="height: 230px;">
-                      <a href="/umkm_page" onclick="send_data('${namaUsaha}')">
-                        <h5 class="is-title-card is-blue">${namaUsaha}</h5>
-                        <em class="is-blue is-subtitle">${daerah}</em>
-                      </a>
-                      <p
-                        class="card-text is-truncated is-black mt-1"
-                        style="line-height: 1.3"
-                      >
-                      ${deskripsi}
-                      </p>
-                      <a href="/umkm_page" class="position-absolute bottom-0 py-4" onclick="send_data('${namaUsaha}')">
-                        <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
-                      </a>
+                      <div class="card-body" style="height: 230px;">
+                        <a href="/umkm_page" onclick="send_data('${namaUsaha}')">
+                          <h5 class="is-title-card is-blue">${namaUsaha}</h5>
+                          <em class="is-blue is-subtitle">${daerah}</em>
+                        </a>
+                        <p
+                          class="card-text is-truncated is-black mt-1"
+                          style="line-height: 1.2"
+                        >
+                        ${deskripsi}
+                        </p>
+                        <a href="/umkm_page" class="position-absolute bottom-0 py-4" onclick="send_data('${namaUsaha}')">
+                          <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
+                        </a>
+                      </div>
                     </div>
-                  </div>
               `;
               $("#preview-list").append(temp_html);
             }
@@ -141,58 +147,58 @@
   </head>
   <body>
     <!-- Navbar Start -->
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a class="navbar-items" href="/">
-        <img
-          src="{{url_for('static', filename='assets/logo/logo-text-blue.png')}}"
-          width="100"
-        />
-      </a>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-items" href="/">
+          <img
+            src="{{url_for('static', filename='assets/logo/logo-text-blue.png')}}"
+            width="100"
+          />
+        </a>
 
-      <a
-        role="button"
-        class="navbar-burger"
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="navbarBasicExample"
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
 
-    <div id="navbarBasicExample" class="navbar-menu">
-      <div class="navbar-end">
-        <div class="navbar-start">
-          <a class="navbar-item" href="/tentang_nourish"> Tentang Nourish </a>
-          <a class="navbar-item" href="/umkm_list"> UMKM </a>
-          {% if 'username' in session %}
-          <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
-          {% else %}
-          <a class="navbar-item active is-hidden" href="/"> Diskusi UMKM </a>
-          {% endif %}
-        </div>
-        <div class="navbar-items mr-3 ml-2 mt-1">
-          {% if 'username' in session %} {% if user_info is defined %}
-          <div class="buttons">
-            <a
-              class="button is-button-orange"
-              href="/user/{{ user_info.username }}"
-            >
-              Profil
-            </a>
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-end">
+          <div class="navbar-start">
+            <a class="navbar-item" href="/tentang_nourish"> Tentang Nourish </a>
+            <a class="navbar-item" href="/umkm_list"> UMKM </a>
+            {% if 'username' in session %}
+            <a class="navbar-item" href="/diskusi"> Diskusi UMKM </a>
+            {% else %}
+            <a class="navbar-item active is-hidden" href="/"> Diskusi UMKM </a>
+            {% endif %}
           </div>
-          {% endif %} {% else %}
-          <div class="buttons">
-            <a class="button is-button-orange" href="/login"> Masuk </a>
+          <div class="navbar-items mr-3 ml-2 mt-1">
+            {% if 'username' in session %} {% if user_info is defined %}
+            <div class="buttons">
+              <a
+                class="button is-button-orange"
+                href="/user/{{ user_info.username }}"
+              >
+                Profil
+              </a>
+            </div>
+            {% endif %} {% else %}
+            <div class="buttons">
+              <a class="button is-button-orange" href="/login"> Masuk </a>
+            </div>
+            {% endif %}
           </div>
-          {% endif %}
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
     <!-- Navbar Stop -->
 
     <!-- Web Description Start -->
@@ -262,105 +268,11 @@
       <h1 class="is-title is-blue mb-3">Preview UMKM</h1>
 
       <div class="container-card ml-0.5">
-        <div class="row g-0" id="preview-list">
-          <div class="card mr-5" style="width: 18rem; border-radius: 15px">
-            <img
-              src="{{ url_for('static', filename=user_info.profile_pic_real) }}"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <a href="#">
-                <!-- <h5 class="is-title-card is-blue">{{user_info.nama_usaha}}</h5> -->
-                <!-- <em class="is-blue is-subtitle">{{user_info.daerah}}</em> -->
-              </a>
-              <p
-                class="card-text is-truncated is-black mt-1"
-                style="line-height: 1.3"
-              >
-                <!-- {{user_info.deskripsi_usaha}} -->
-              </p>
-              <a href="#">
-                <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
-              </a>
-            </div>
-          </div>
-
-          <div class="card mr-5" style="width: 18rem; border-radius: 15px">
-            <img
-              src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <a href="#">
-                <h5 class="is-title-card is-blue">Toko Kayu Hias</h5>
-                <em class="is-blue is-subtitle">Banyuwangi</em>
-              </a>
-              <p
-                class="card-text is-truncated is-black mt-1"
-                style="line-height: 1.3"
-              >
-                Toko Kayu Hias adalah sebuah usaha mikro, kecil, dan menengah
-                (UMKM) yang berfokus pada produksi dan penjualan berbagai produk
-                kayu hias.
-              </p>
-              <a href="#">
-                <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
-              </a>
-            </div>
-          </div>
-
-          <div class="card mr-5" style="width: 18rem; border-radius: 15px">
-            <img
-              src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <a href="#">
-                <h5 class="is-title-card is-blue">Toko Kayu Hias</h5>
-                <em class="is-blue is-subtitle">Banyuwangi</em>
-              </a>
-              <p
-                class="card-text is-truncated is-black mt-1"
-                style="line-height: 1.3"
-              >
-                Toko Kayu Hias adalah sebuah usaha mikro, kecil, dan menengah
-                (UMKM) yang berfokus pada produksi dan penjualan berbagai produk
-                kayu hias.
-              </p>
-              <a href="#">
-                <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
-              </a>
-            </div>
-          </div>
-
-          <div class="card mr-5" style="width: 18rem; border-radius: 15px">
-            <img
-              src="{{url_for('static', filename='assets/dummy-image/profile-umkm.jpg')}}"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <a href="#">
-                <h5 class="is-title-card is-blue">Toko Kayu Hias</h5>
-                <em class="is-blue is-subtitle">Banyuwangi</em>
-              </a>
-              <p
-                class="card-text is-truncated is-black mt-1"
-                style="line-height: 1.3"
-              >
-                Toko Kayu Hias adalah sebuah usaha mikro, kecil, dan menengah
-                (UMKM) yang berfokus pada produksi dan penjualan berbagai produk
-                kayu hias.
-              </p>
-              <a href="#">
-                <h3 class="is-blue is-button-text mt-4">Kunjungi</h3>
-              </a>
-            </div>
-          </div>
-        </div>
+        <div
+          class=""
+          id="preview-list"
+          style="overflow-x: scroll; display: flex"
+        ></div>
       </div>
     </section>
     <!-- Preview UMKM Stop -->

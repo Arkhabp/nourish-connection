@@ -66,7 +66,7 @@
         $.ajax({
           type: "GET",
           url: "/get_umkm_page",
-          data: { namaUsaha: namaUsaha }, // Kirim namaUsaha sebagai parameter permintaan
+          data: { namaUsaha: encodeURIComponent(namaUsaha) }, // Kirim namaUsaha sebagai parameter permintaan
           success: function (response) {
             console.log(response);
             let namaUsaha = response["umkm_data"]["nama_usaha"];
@@ -163,7 +163,7 @@
             width="100"
           />
         </a>
-  
+
         <a
           role="button"
           class="navbar-burger"
@@ -176,7 +176,7 @@
           <span aria-hidden="true"></span>
         </a>
       </div>
-  
+
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-start">
