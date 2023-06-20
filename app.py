@@ -495,10 +495,12 @@ def save_comment():
         username = request.args.get('username_give')
         date_receive = request.form.get('date_give')
         profilePhoto_receive = request.form.get('profilePhoto_give')
+        namaUsaha_receive = request.form.get('namaUsaha_give')
         user_info = db.users.find_one({'username' : payload.get('id')})
         doc = {
             'comment_id' : comment_id,
             'username' : user_info.get('username'),
+            'nama_usaha' : namaUsaha_receive,
             'comment' : comment,
             'date' : date_receive,
             'profile_pic_real' : profilePhoto_receive
@@ -524,6 +526,7 @@ def get_comments():
     for comment in comment_data:
         comments.append({
             'username': comment.get('username'),
+            'nama_usaha':comment.get('nama_usaha'),
             'comment': comment.get('comment'),
             'date' : comment.get('date'),
             'profile_pic_real' : comment.get('profile_pic_real')

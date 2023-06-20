@@ -123,11 +123,13 @@
         $("#comment-section-" + postId).toggleClass("is-hidden");
       }
 
-      function add_comment(postId, usernameComment, profilePhoto){
+      function add_comment(postId, usernameComment, profilePhoto, namaUsaha){
         usernameComment = '{{ user_info.username }}'
         profilePhoto = '{{user_info.profile_pic_real}}'
+        namaUsaha='{{user_info.nama_usaha}}'
         console.log(usernameComment)
         console.log(profilePhoto)
+        console.log(namaUsaha)
         let new_comment = $('#new-comment-' + postId).val();
         if (new_comment === "" ){
               alert("Masukkan komentar anda!")
@@ -142,6 +144,7 @@
             post_id_give: postId,
             username_give : usernameComment,
             profilePhoto_give : profilePhoto,
+            namaUsaha_give : namaUsaha,
             comment : new_comment,
             date_give: today,
           },
@@ -199,7 +202,7 @@
                       />
                     </div>
 
-                    <a href="/umkm_page" onclick="send_data('${comment.username}')">
+                    <a href="/umkm_page" onclick="send_data('${comment.nama_usaha}')">
                       <div>
                         <p class="is-title-card is-black">${comment.username}</p>
                         <p class="is-black is-subtitle mb-1" style="margin-top: -4px;">${time_before}</p>
