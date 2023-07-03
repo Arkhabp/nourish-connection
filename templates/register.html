@@ -49,6 +49,11 @@
       rel="stylesheet"
     />
 
+    <!-- Sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css" />
+
     <!-- Custom JS -->
     <script>
       function daftar() {
@@ -83,10 +88,12 @@
         //   alert("Isi form pendaftaran");
         // }
         if ($(helpId).hasClass("is-danger")) {
-          alert("Please check your id");
+          // alert("Please check your id");
+          Swal.fire("Periksa kembali username anda");
           return;
         } else if (!$(helpId).hasClass("is-success")) {
-          alert("Please double check your id, something is wrong");
+          // alert("Please double check your id, something is wrong");
+          Swal.fire("Isi semua form untuk data usaha anda!");
           return;
         }
 
@@ -194,10 +201,32 @@
             deskripsiUsaha_give: deskripsiUsaha,
           },
           success: function (response) {
-            alert("berhasil daftar");
+            // alert("berhasil daftar");
             console.log(response);
             if (response.result === "success") {
-              window.location.replace("/login");
+              let timerInterval;
+              Swal.fire({
+                title: "Berhasil mendaftar",
+                html: "Tunggu beberapa saat",
+                timer: 1000,
+                timerProgressBar: true,
+                didOpen: () => {
+                  Swal.showLoading();
+                  const b = Swal.getHtmlContainer().querySelector("b");
+                  timerInterval = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft();
+                  }, 100);
+                },
+                willClose: () => {
+                  window.location.replace("/login");
+                  clearInterval(timerInterval);
+                },
+              }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                  console.log("I was closed by the timer");
+                }
+              });
             }
           },
           error: function (error) {
