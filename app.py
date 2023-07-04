@@ -216,14 +216,14 @@ def go_login():
         else:
             return jsonify({
                 "result": "fail",
-                "msg": "Your account is not active"
+                "msg": "Akun kamu masih proses verifikasi"
             })
     else:
         # return jsonify({
         #     "result": "fail",
         #     "msg": "We could not find a user with that id/password combination"
         # })
-        return jsonify(result="fail", msg="We could not find a user with that id/password combination")
+        return jsonify(result="fail", msg="Tidak dapat menemukan username atau password")
     
 @app.route('/logout')
 def logout():

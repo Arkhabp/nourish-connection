@@ -43,6 +43,11 @@
       crossorigin="anonymous"
     />
 
+    <!-- Sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css" />
+
     <!-- Poppins Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@500;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
@@ -52,8 +57,36 @@
     <script>
       function sign_out() {
         $.removeCookie("mytoken", { path: "/" });
-        alert("Signed out!");
-        window.location.href = "/logout";
+        Swal.fire({
+          title: "Kamu yakin ingin keluar?",
+          icon: "question",
+          iconHtml: "?",
+          confirmButtonText: "Keluar",
+          cancelButtonText: "Batal",
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          showCancelButton: true,
+          showCloseButton: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/logout";
+          }
+        });
+        // alert("Signed out!");
+      }
+
+      function update_status() {
+        let status = $("#status").val();
+        $.ajax({
+          type: "POST",
+          url: "/admin/update_status",
+          data: {
+            status_give: status,
+          },
+          success: function (response) {
+            console.log(response);
+          },
+        });
       }
     </script>
   </head>
@@ -131,7 +164,7 @@
                 name="username"
                 value="{{ user.username }}"
               />
-              <select name="status">
+              <select name="status" id="status">
                 <option value="active">Active</option>
                 <option value="nonactive" name="nonactive">Non-active</option>
               </select>

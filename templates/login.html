@@ -43,6 +43,11 @@
       crossorigin="anonymous"
     />
 
+    <!-- Sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css" />
+
     <!-- Poppins Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@500;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
@@ -66,20 +71,44 @@
             if (response.result === "success") {
               let token = response.token;
               $.cookie("mytoken", response.token, { path: "/" });
-              alert("berhasil login");
-              if (response.role === "admin") {
-                //baru ditambah
-                window.location.replace("/admin"); //baru ditambah
-              } else {
-                //baru ditambah
-                window.location.replace("/"); //baru ditambah
-              }
+              // alert("berhasil login");
+              let timerInterval;
+              Swal.fire({
+                title: "Berhasil Login",
+                html: "Tunggu beberapa saat",
+                timer: 1000,
+                timerProgressBar: true,
+                didOpen: () => {
+                  Swal.showLoading();
+                  const b = Swal.getHtmlContainer().querySelector("b");
+                  timerInterval = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft();
+                  }, 100);
+                },
+                willClose: () => {
+                  if (response.role === "admin") {
+                    //baru ditambah
+                    window.location.replace("/admin"); //baru ditambah
+                  } else {
+                    //baru ditambah
+                    window.location.replace("/"); //baru ditambah
+                  }
+                  clearInterval(timerInterval);
+                },
+              }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                  console.log("I was closed by the timer");
+                }
+              });
               // window.location.replace("/"); seharusnya
             } else {
-              alert(response.msg);
-              if (response.msg === "Your account is not active") {
-                $("#login-msg").text("Your account is not active");
-              }
+              // alert(response.msg);
+              Swal.fire({
+                icon: "error",
+                title: response.msg,
+                text: "Ada yang salah!",
+              });
             }
           },
         });
@@ -132,7 +161,7 @@
                       role="tab"
                       aria-controls="pills-home"
                       aria-selected="true"
-                      style="background-color: #1A3B70;"
+                      style="background-color: #1a3b70"
                     >
                       Masuk
                     </button>
@@ -169,7 +198,7 @@
                         type="button"
                         class="btn text-white mx-auto d-block px-4"
                         onclick="login()"
-                        style="background-color: #F88125;"
+                        style="background-color: #f88125"
                       >
                         Masuk Sebagai UMKM
                       </button>

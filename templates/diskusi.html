@@ -49,6 +49,11 @@
     rel="stylesheet"
     />
 
+    <!-- Sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css" />
+
     <!-- Poppins Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@500;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
@@ -62,7 +67,11 @@
       function post() {
         let topik = $("#topik-post").val();
         if (topik === ""){
-          alert('Tuliskan diskusi kamu!')
+          Swal.fire({
+            title: 'Tuliskan topik diskusi anda',
+            icon: 'warning',
+            confirmButtonColor: '#1a3b70'
+          })
           return;
         }
         let today = new Date().toISOString();
@@ -132,7 +141,11 @@
         console.log(namaUsaha)
         let new_comment = $('#new-comment-' + postId).val();
         if (new_comment === "" ){
-              alert("Masukkan komentar anda!")
+            Swal.fire({
+              title: 'Tuliskan komentar anda',
+              icon: 'warning',
+              confirmButtonColor: '#1a3b70'
+            })
               return;
             }
         let today = new Date().toISOString();
@@ -367,22 +380,46 @@
         let username_post = '{{ user_info.username }}'
         let topik_post = postId
         console.log(username_post)
-        $.ajax({
-          type : 'POST',
-          url : '/delete_post',
-          data : {
-            username_give : username_post,
-            postId_give : topik_post
-          },
-          success : function(response){
-            if (response.result === 'success'){
-              alert(response.msg);
-              location.reload();
-            }else{
-              alert('Something went wrong')
-            }
+        Swal.fire({
+          title: 'Kamu yakin',
+          text: "Ingin menghapus postingan ini?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#1a3b70',
+          cancelButtonColor: '#ff000f',
+          confirmButtonText: 'Ya, Hapus!',
+          cancelButtonText : "Batal"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              type : 'POST',
+              url : '/delete_post',
+              data : {
+                username_give : username_post,
+                postId_give : topik_post
+              },
+              success : function(response){
+                if (response.result === 'success'){
+                  // alert(response.msg);
+                  Swal.fire({
+                    title: 'Deleted!',
+                    text: 'Your file has been deleted.',
+                    icon: 'success',
+                    confirmButtonColor: '#1a3b70'
+                  }).then((result)=>{
+                    if (result.isConfirmed){
+                      location.reload();
+                    }
+                  })
+                }else{
+                  alert('Something went wrong')
+                }
+                
+              }
+            })
           }
         })
+        
       }
 
       function send_data(namaUsaha) {

@@ -43,6 +43,11 @@
       crossorigin="anonymous"
     />
 
+    <!-- Sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css" />
+
     <!-- Poppins Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@500;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
@@ -55,9 +60,31 @@
       });
 
       function sign_out() {
-        $.removeCookie("mytoken", { path: "/" });
-        alert("Signed out!");
-        window.location.href = "/logout";
+        Swal.fire({
+          title: "Kamu yakin?",
+          text: "Klik batal jika tidak ingin keluar.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#1a3b70",
+          cancelButtonColor: "#ff000f",
+          confirmButtonText: "Ya, Keluar!",
+          cancelButtonText: "Batal",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire({
+              title: "Berhasil keluar!",
+              text: "Kamu akan diarahkan ke halaman awal.",
+              icon: "success",
+              confirmButtonColor: "#1a3b70",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $.removeCookie("mytoken", { path: "/" });
+                // alert("Signed out!");
+                window.location.href = "/logout";
+              }
+            });
+          }
+        });
       }
 
       function update_profile() {
@@ -100,7 +127,7 @@
             width="100"
           />
         </a>
-  
+
         <a
           role="button"
           class="navbar-burger"
@@ -113,7 +140,7 @@
           <span aria-hidden="true"></span>
         </a>
       </div>
-  
+
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-start">
@@ -140,7 +167,7 @@
         </div>
       </div>
     </nav>
-  
+
     <!-- Navbar Stop -->
 
     <!-- Photo Profile Section Start-->
